@@ -1,0 +1,39 @@
+# IDEs and Editors
+.idea/
+.vscode/
+frontend/.vscode/
+
+# Environment variables
+.env
+.env.*
+
+# Node.js
+node_modules/
+frontend/node_modules/
+
+# Hardhat build artifacts and cache
+artifacts/
+cache/
+typechain-types/
+
+# Frontend build artifacts
+frontend/.next/
+frontend/out/
+
+# Coverage and Reports
+coverage/
+*.lcov
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Misc
+.DS_Store
+dist/
+deployments/
+
+# GitHub workflows (optional to ignore if generated)
+.github/
