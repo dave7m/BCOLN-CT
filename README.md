@@ -39,6 +39,7 @@ yarn install
 ```
 
 This will install dependencies for:
+
 - Root (Hardhat + Solidity)
 - `frontend/` workspace (React, Next.js, etc.)
 
@@ -60,7 +61,7 @@ yarn clean
 
 ### 🚀 Deploy Locally (testnet / localhost)
 
-For deploying contracts to a blockchain, we need to use the private_key of an account. 
+For deploying contracts to a blockchain, we need to use the private_key of an account.
 Please create a `env.local` file, where you can store your private keys. Do not expose
 them outside of this. Also, you must give the RPC_URL a blockchain.
 Your `env.local` file should then look like this:
@@ -74,12 +75,13 @@ TEST_NET=http://127.0.0.1:7545
 yarn deploy:local
 ```
 
-*(Customize your Hardhat networks in `hardhat.config.js`)*
+_(Customize your Hardhat networks in `hardhat.config.js`)_
 
 Once you have deployed a contract, you can interact with it:
+
 ```js
-const contract = await ethers.getContractAt("HelloWorldContract", "0x...")
-await contract.getMessage()
+const contract = await ethers.getContractAt("HelloWorldContract", "0x...");
+await contract.getMessage();
 ```
 
 ---
@@ -97,6 +99,7 @@ yarn lint
 ```
 
 This runs:
+
 - `next lint` in the `frontend/` workspace
 - `solhint` on Solidity contracts
 

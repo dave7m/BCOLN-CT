@@ -18,7 +18,8 @@
     "compile": "hardhat compile",
     "clean": "hardhat clean",
     "deploy:local": "hardhat deploy --network testnet",
-    "console:local": "hardhat console --network testnet"
+    "console:local": "hardhat console --network testnet",
+    "test": "hardhat typechain && hardhat test"
   },
   "keywords": [],
   "author": "",

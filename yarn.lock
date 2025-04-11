@@ -1587,7 +1587,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@nomicfoundation/hardhat-ethers@npm:^3.0.8":
+"@nomicfoundation/hardhat-ethers@npm:^3.0.0":
   version: 3.0.8
   resolution: "@nomicfoundation/hardhat-ethers@npm:3.0.8"
   dependencies:
@@ -1613,7 +1613,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@nomicfoundation/hardhat-ignition@npm:^0.15.10":
+"@nomicfoundation/hardhat-ignition@npm:^0.15.0":
   version: 0.15.11
   resolution: "@nomicfoundation/hardhat-ignition@npm:0.15.11"
   dependencies:
@@ -1687,7 +1687,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@nomicfoundation/ignition-core@npm:^0.15.10, @nomicfoundation/ignition-core@npm:^0.15.11":
+"@nomicfoundation/ignition-core@npm:^0.15.11":
   version: 0.15.11
   resolution: "@nomicfoundation/ignition-core@npm:0.15.11"
   dependencies:
@@ -2250,7 +2250,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/node@npm:*, @types/node@npm:^22.13.16, @types/node@npm:^22.13.17":
+"@types/node@npm:*, @types/node@npm:>=18.0.0, @types/node@npm:^22.13.17":
   version: 22.14.0
   resolution: "@types/node@npm:22.14.0"
   dependencies:
@@ -2908,9 +2908,11 @@ __metadata:
   linkType: hard
 
 "antlr4ts@npm:^0.5.0-alpha.4":
-  version: 0.5.0-alpha.4
-  resolution: "antlr4ts@npm:0.5.0-alpha.4"
-  checksum: 37948499d59477f5b5a8ea71dfb8b5330e71d5a7cee60f57351dd744219b8619fa6aac1a5b6ec1a9991846e8ddc9ca47680eb166c59b44333369b3115e7aa358
+  version: 0.5.0-dev
+  resolution: "antlr4ts@npm:0.5.0-dev"
+  dependencies:
+    source-map-support: ^0.5.16
+  checksum: 640dae2229124372b0329315e9614ae983bb80b1af237d8c0b3e90a2d85fb534e851c51d65d1897c92b36d27851d041ad8d95aab44af19cf7355b3ad11a3ddbf
   languageName: node
   linkType: hard
 
@@ -5005,9 +5007,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"ethers@npm:^6.13.5, ethers@npm:^6.7.0":
-  version: 6.13.5
-  resolution: "ethers@npm:6.13.5"
+"ethers@npm:^6.4.0, ethers@npm:^6.7.0":
+  version: 6.13.6
+  resolution: "ethers@npm:6.13.6"
   dependencies:
     "@adraffy/ens-normalize": 1.10.1
     "@noble/curves": 1.2.0
@@ -5016,7 +5018,7 @@ __metadata:
     aes-js: 4.0.0-beta.5
     tslib: 2.7.0
     ws: 8.17.1
-  checksum: 25700f75c3854fb5043b72748c7a4198efd15d50b4e66d575e6287aab707e855d9aa5ba342fe3d4a4c7943c84a46bcf3702b0f1da1307a82c40e1d08e86078ba
+  checksum: 9d0eb6d031c11a325dcab34378c70f335d2985c33063e07e82c85d1448135b730d2bfb47fb28c8d618c57f37462793b0fad9e16588ba3b2dffc77c898b580ee5
   languageName: node
   linkType: hard
 
@@ -5836,7 +5838,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"hardhat@npm:^2.22.19":
+"hardhat@npm:^2.23.0":
   version: 2.23.0
   resolution: "hardhat@npm:2.23.0"
   dependencies:
@@ -8886,7 +8888,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"solidity-coverage@npm:^0.8.1":
+"solidity-coverage@npm:^0.8.0":
   version: 0.8.14
   resolution: "solidity-coverage@npm:0.8.14"
   dependencies:
@@ -8924,7 +8926,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"source-map-support@npm:^0.5.13":
+"source-map-support@npm:^0.5.13, source-map-support@npm:^0.5.16":
   version: 0.5.21
   resolution: "source-map-support@npm:0.5.21"
   dependencies:
@@ -9436,7 +9438,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"ts-node@npm:^10.9.2":
+"ts-node@npm:>=8.0.0":
   version: 10.9.2
   resolution: "ts-node@npm:10.9.2"
   dependencies:
@@ -9653,7 +9655,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"typescript@npm:^5.8.2":
+"typescript@npm:>=4.5.0, typescript@npm:^5.8.2":
   version: 5.8.3
   resolution: "typescript@npm:5.8.3"
   bin:
@@ -9663,7 +9665,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"typescript@patch:typescript@^5.8.2#~builtin<compat/typescript>":
+"typescript@patch:typescript@>=4.5.0#~builtin<compat/typescript>, typescript@patch:typescript@^5.8.2#~builtin<compat/typescript>":
   version: 5.8.3
   resolution: "typescript@patch:typescript@npm%3A5.8.3#~builtin<compat/typescript>::version=5.8.3&hash=a1c5e5"
   bin:
@@ -9861,19 +9863,18 @@ __metadata:
   resolution: "uzh-uniswap-v3@workspace:."
   dependencies:
     "@nomicfoundation/hardhat-chai-matchers": ^2.0.0
-    "@nomicfoundation/hardhat-ethers": ^3.0.8
-    "@nomicfoundation/hardhat-ignition": ^0.15.10
+    "@nomicfoundation/hardhat-ethers": ^3.0.0
+    "@nomicfoundation/hardhat-ignition": ^0.15.0
     "@nomicfoundation/hardhat-ignition-ethers": ^0.15.0
     "@nomicfoundation/hardhat-network-helpers": ^1.0.0
     "@nomicfoundation/hardhat-toolbox": ^5.0.0
     "@nomicfoundation/hardhat-verify": ^2.0.0
-    "@nomicfoundation/ignition-core": ^0.15.10
     "@openzeppelin/contracts": ^5.3.0
     "@typechain/ethers-v6": ^0.5.0
     "@typechain/hardhat": ^9.0.0
     "@types/chai": ^4.2.0
     "@types/mocha": ">=9.1.0"
-    "@types/node": ^22.13.16
+    "@types/node": ">=18.0.0"
     "@typescript-eslint/eslint-plugin": 5.48.1
     "@typescript-eslint/parser": 5.48.1
     "@uniswap/v3-core": ^1.0.1
@@ -9884,16 +9885,17 @@ __metadata:
     eslint-config-alloy: 4.9.0
     eslint-config-prettier: ^10.1.1
     eslint-plugin-prettier: ^5.2.5
-    ethers: ^6.13.5
-    hardhat: ^2.22.19
+    ethers: ^6.4.0
+    hardhat: ^2.23.0
     hardhat-deploy: ^1.0.1
     hardhat-gas-reporter: ^1.0.8
     prettier: ^3.5.3
     prettier-plugin-solidity: ^1.4.2
     solhint: ^5.0.5
-    solidity-coverage: ^0.8.1
-    ts-node: ^10.9.2
+    solidity-coverage: ^0.8.0
+    ts-node: ">=8.0.0"
     typechain: ^8.3.0
+    typescript: ">=4.5.0"
   languageName: unknown
   linkType: soft
 
