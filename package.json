@@ -5,6 +5,11 @@
   "workspaces": [
     "frontend"
   ],
+  "engines": {
+    "node": "=18.12.1",
+    "yarn": ">=3.2.3",
+    "npm": "please-use-yarn"
+  },
   "main": "index.js",
   "scripts": {
     "lint": "yarn workspace frontend lint && yarn run lint:sol",
@@ -35,6 +40,7 @@
     "@nomicfoundation/hardhat-toolbox": "^5.0.0",
     "@nomicfoundation/hardhat-verify": "^2.0.0",
     "@nomicfoundation/ignition-core": "^0.15.10",
+    "@openzeppelin/contracts": "^5.3.0",
     "@typechain/ethers-v6": "^0.5.0",
     "@typechain/hardhat": "^9.0.0",
     "@types/chai": "^4.2.0",
@@ -55,5 +61,6 @@
     "solhint": "^5.0.5",
     "solidity-coverage": "^0.8.1",
     "typechain": "^8.3.0"
-  }
+  },
+  "packageManager": "yarn@3.2.3"
 }
