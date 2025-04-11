@@ -4,21 +4,14 @@
     "module": "commonjs",
     "moduleResolution": "node",
     "strict": true,
+    "skipLibCheck": true,
     "esModuleInterop": true,
     "resolveJsonModule": true,
     "outDir": "dist",
     "allowJs": true,
     "noEmit": true,
-    "types": [
-      "node",
-      "hardhat"
-    ],
-    "lib": [
-      "dom",
-      "dom.iterable",
-      "esnext"
-    ],
-    "skipLibCheck": true,
+    "types": ["node", "hardhat", "chai", "mocha"],
+    "lib": ["dom", "dom.iterable", "esnext"],
     "forceConsistentCasingInFileNames": true,
     "incremental": true,
     "isolatedModules": true,

@@ -18,8 +18,10 @@
     "format": "prettier --ignore-path .prettierignore --write .",
     "compile": "hardhat compile",
     "clean": "hardhat clean",
+    "extract:local-keys": "ts-node scripts/export-accounts.ts",
     "deploy:local": "hardhat deploy --network testnet",
-    "console:local": "hardhat console --network testnet"
+    "console:local": "hardhat console --network testnet",
+    "test": "hardhat typechain && hardhat test"
   },
   "keywords": [],
   "author": "",
@@ -77,7 +79,8 @@
     "solhint": "^5.0.5",
     "solidity-coverage": "^0.8.1",
     "tailwindcss": "3.2.4",
-    "typechain": "^8.3.0"
+    "typechain": "^8.3.0",
+    "typescript": "^5.8.3"
   },
   "packageManager": "yarn@3.2.3"
 }

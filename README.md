@@ -39,6 +39,7 @@ yarn install
 ```
 
 This will install dependencies for:
+
 - Root (Hardhat + Solidity)
 - `frontend/` workspace (React, Next.js, etc.)
 
@@ -122,6 +123,7 @@ yarn deploy:local
 _(Customize your Hardhat networks in `hardhat.config.js`)_
 
 Once you have deployed a contract, you can interact with it:
+
 ```js
 const contract = await ethers.getContractAt("HelloWorldContract", "0x...");
 await contract.getMessage();
@@ -142,6 +144,7 @@ yarn lint
 ```
 
 This runs:
+
 - `next lint` in the `frontend/` workspace
 - `solhint` on Solidity contracts
 

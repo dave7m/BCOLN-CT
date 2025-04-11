@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.17;
 
-import "@openzeppelin/contracts/access/Ownable.sol" as Ownable;
+import { Ownable } from "@openzeppelin/contracts/access/Ownable.sol";
 
 error NoLotteryOwner(string reason);
 error SimpleError(string reason);
@@ -66,6 +66,8 @@ contract LotteryManager is Ownable, ILotteryManager {
         _;
     }
 
+    constructor() Ownable(msg.sender){}
+
     function createLottery(
         string memory title,
         string memory description,
@@ -82,7 +84,7 @@ contract LotteryManager is Ownable, ILotteryManager {
         uint256 lotteryId = _totalLotteries;
 
         // create new lottery
-        LotteryStruct newLottery = LotteryStruct({
+        LotteryStruct memory newLottery = LotteryStruct({
             id: lotteryId,
             title: title,
             description: description,
@@ -150,7 +152,7 @@ contract LotteryManager is Ownable, ILotteryManager {
             }
         }
 
-        string[] memory available = new string[](count);
+        available = new string[](count);
 
         uint256 j = 0;
         for (uint256 i = 0; i < all.length; i++) {
@@ -161,6 +163,10 @@ contract LotteryManager is Ownable, ILotteryManager {
         }
 
         return available;
+    }
+
+    function getLottery(uint256 lotteryId) external view returns (LotteryStruct memory) {
+        return lotteries[lotteryId];
     }
 
     // getter for the lottery participants
