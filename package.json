@@ -17,14 +17,17 @@
     "format": "prettier --ignore-path .prettierignore --write .",
     "compile": "hardhat compile",
     "clean": "hardhat clean",
-    "deploy:local": "hardhat deploy --network testnet",
-    "console:local": "hardhat console --network testnet"
+    "deploy:local:mocks":  "hardhat deploy --tags mocks --network localhost",
+    "deploy:local:lottery": "hardhat deploy --tags lottery --network localhost",
+    "console:local": "hardhat console --network localhost",
+    "test": "hardhat typechain && hardhat test"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "description": "",
   "dependencies": {
+    "@chainlink/contracts": "^1.3.0",
     "@nomicfoundation/hardhat-ethers": "^3.0.8",
     "@nomicfoundation/hardhat-ignition": "^0.15.10",
     "@uniswap/v3-core": "^1.0.1",

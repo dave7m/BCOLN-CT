@@ -37,3 +37,9 @@ deployments/
 
 # GitHub workflows (optional to ignore if generated)
 .github/
+
+# yarn
+.yarn/cache
+.yarn/install-state.gz
+.yarn/unplugged
+.yarn/build-state.yml
