@@ -1,101 +1,138 @@
 import { expect } from "chai";
 import { ethers } from "hardhat";
-import { LotteryManager } from "../typechain-types";
+import type { LotteryManager } from "../typechain-types";
 
 describe("LotteryManager", function () {
-  let lottery: LotteryManager;
-  let owner: any;
-  let addr1: any;
-  let addr2: any;
-
+  let manager: LotteryManager;
+  let owner: any, alice: any, bob: any;
   const ticketPrice = ethers.parseEther("0.01");
   const servicePercent = 10;
   const expiresInOneHour = Math.floor(Date.now() / 1000) + 3600;
 
-  beforeEach(async function () {
-    [owner, addr1, addr2] = await ethers.getSigners();
-    const LotteryManagerFactory =
-      await ethers.getContractFactory("LotteryManager", owner);
-    lottery = (await LotteryManagerFactory.deploy()) as LotteryManager;
-    await lottery.waitForDeployment();
+  beforeEach(async () => {
+    [owner, alice, bob] = await ethers.getSigners();
+    const Mgr = await ethers.getContractFactory("LotteryManager", owner);
+    manager = (await Mgr.deploy()) as LotteryManager;
+    await manager.waitForDeployment();
   });
 
-  it("should create a lottery", async function () {
-    await lottery.createLottery(
-      "Test",
-      "Test description",
+  it("should create & read back a lottery", async () => {
+    await manager.createLottery(
+      "My Lotto",
+      "Description",
       ticketPrice,
       servicePercent,
       expiresInOneHour,
     );
-    const result = await lottery.getLottery(1);
-    expect(result.title).to.equal("Test");
+    const L = await manager.getLottery(1);
+    expect(L.title).to.equal("My Lotto");
+    expect(L.numOfParticipants).to.equal(0);
+    expect(L.servicePercent).to.equal(servicePercent);
   });
 
-  it("should allow the owner to import lucky numbers", async function () {
-    await lottery.createLottery(
-      "Test",
-      "Test description",
+  it("only owner can import lucky numbers", async () => {
+    await manager.createLottery(
+      "T",
+      "D",
       ticketPrice,
       servicePercent,
       expiresInOneHour,
     );
-    await lottery.importLuckyNumbers(1, ["ABC", "DEF"]);
-    const available = await lottery.getAvailableLuckyNumbers(1);
-    expect(available).to.deep.equal(["ABC", "DEF"]);
-  });
-
-  it("should allow a user to buy a ticket", async function () {
-    await lottery.createLottery(
-        "Test",
-        "Test description",
-        ticketPrice,
-        servicePercent,
-        expiresInOneHour,
-    );
-    await lottery.importLuckyNumbers(1, ["ABC"]);
-
-    const lotteryAsAddr1 = lottery.connect(addr1); // 👈 use this
-    await expect(lotteryAsAddr1.buyTicket(1, 0, { value: ticketPrice })).to.emit(lotteryAsAddr1, "TicketBought");
-
-    const participants = await lottery.getParticipants(1);
-    expect(participants.length).to.equal(1);
-    expect(participants[0].account).to.equal(await addr1.getAddress());
-    expect(participants[0].lotteryNumber).to.equal("ABC");
-  });
-
-  it("should reject buying with insufficient ETH", async function () {
-    await lottery.createLottery(
-      "Test",
-      "Test description",
-      ticketPrice,
-      servicePercent,
-      expiresInOneHour,
-    );
-    await lottery.importLuckyNumbers(1, ["ABC"]);
-    const lotteryAsAddr1 = lottery.connect(addr1); // 👈 use this
-    // await expect(
-    //     lotteryAsAddr1.buyTicket(1, 0, { value: 0 })
-    // ).to.be.revertedWithCustomError(lottery, "SimpleError");
+    // bob tries to import → revert
     await expect(
-      lotteryAsAddr1.buyTicket(1, 0, { value: 0 }),
-    ).to.be.reverted;
+      manager.connect(bob).importLuckyNumbers(1, ["X", "Y"]),
+    ).to.be.revertedWithCustomError(manager, "NoLotteryOwner");
+    // owner succeeds
+    await expect(manager.importLuckyNumbers(1, ["A", "B"])).to.emit(
+      manager,
+      "LuckyNumbersImported",
+    );
   });
 
-
-
-  it("should prevent reusing a lucky number", async function () {
-    await lottery.createLottery(
-      "Test",
-      "Test description",
+  it("cannot import twice", async () => {
+    await manager.createLottery(
+      "T",
+      "D",
       ticketPrice,
       servicePercent,
       expiresInOneHour,
     );
-    await lottery.importLuckyNumbers(1, ["ABC"]);
-    await lottery.connect(addr1).buyTicket(1, 0, { value: ticketPrice });
+    await manager.importLuckyNumbers(1, ["A"]);
+    // second import
     await expect(
-      lottery.connect(addr2).buyTicket(1, 0, { value: ticketPrice }),
-    ).to.be.reverted;
+      manager.importLuckyNumbers(1, ["C"]),
+    ).to.be.revertedWithCustomError(manager, "SimpleError");
+  });
+
+  it("getAvailableLuckyNumbers updates after each purchase", async () => {
+    await manager.createLottery(
+      "T",
+      "D",
+      ticketPrice,
+      servicePercent,
+      expiresInOneHour,
+    );
+    await manager.importLuckyNumbers(1, ["A", "B", "C"]);
+    expect(await manager.getAvailableLuckyNumbers(1)).to.deep.equal([
+      "A",
+      "B",
+      "C",
+    ]);
+
+    await manager.connect(alice).buyTicket(1, 1, { value: ticketPrice }); // uses "B"
+    expect(await manager.getAvailableLuckyNumbers(1)).to.deep.equal(["A", "C"]);
+  });
+
+  it("allows buying tickets & updates jackpot", async () => {
+    await manager.createLottery(
+      "T",
+      "D",
+      ticketPrice,
+      servicePercent,
+      expiresInOneHour,
+    );
+    await manager.importLuckyNumbers(1, ["A", "B"]);
+    await expect(
+      manager.connect(alice).buyTicket(1, 0, { value: ticketPrice }),
+    ).to.emit(manager, "TicketBought");
+    await expect(
+      manager.connect(bob).buyTicket(1, 1, { value: ticketPrice }),
+    ).to.emit(manager, "TicketBought");
+
+    const parts = await manager.getLotteryParticipants(1);
+    expect(parts.length).to.equal(2);
+    expect(parts[0]).to.equal(await alice.getAddress());
+    expect(parts[1]).to.equal(await bob.getAddress());
+
+    // jackpot = ticketPrice * 2
+    expect(await manager.getJackpot(1)).to.equal(ticketPrice * 2n);
+  });
+
+  it("rejects insufficient ETH or reuse of same number", async () => {
+    await manager.createLottery(
+      "T",
+      "D",
+      ticketPrice,
+      servicePercent,
+      expiresInOneHour,
+    );
+    await manager.importLuckyNumbers(1, ["A"]);
+    await expect(
+      manager.connect(alice).buyTicket(1, 0, { value: 0 }),
+    ).to.be.revertedWithCustomError(manager, "SimpleError");
+    // buy once
+    await manager.connect(alice).buyTicket(1, 0, { value: ticketPrice });
+    // reuse
+    await expect(
+      manager.connect(bob).buyTicket(1, 0, { value: ticketPrice }),
+    ).to.be.revertedWithCustomError(manager, "SimpleError");
+  });
+
+  it("only owner can setGame", async () => {
+    await expect(
+      manager.connect(alice).setGame(alice.address),
+    ).to.be.revertedWithCustomError(manager, "OwnableUnauthorizedAccount");
+    // owner
+    await expect(manager.setGame(alice.address)).to.not.be.reverted;
   });
 });

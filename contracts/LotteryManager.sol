@@ -4,6 +4,7 @@ pragma solidity ^0.8.17;
 import { Ownable } from "@openzeppelin/contracts/access/Ownable.sol";
 
 error NoLotteryOwner(string reason);
+error OnlyGame(string reason);
 error SimpleError(string reason);
 
 interface ILotteryManager {
@@ -12,7 +13,7 @@ interface ILotteryManager {
         string title;
         string description;
         uint256 ticketPrice;
-        uint256 participants;
+        uint256 numOfParticipants;
         uint256 servicePercent;
         bool drawn;
         address owner;
@@ -39,13 +40,21 @@ interface ILotteryManager {
     function importLuckyNumbers(uint256 id, string[] memory luckyNumbers) external;
     function buyTicket(uint256 id, uint256 luckyNumberIndex) external payable;
     function getAvailableLuckyNumbers(uint256 lotteryId) external view returns (string[] memory available);
-    function getParticipants(uint256 id) external view returns (ParticipationStruct[] memory);
-    function getPrize(uint256 lotteryId) external view returns (uint256);
+    function getLotteryParticipants(uint256 id) external view returns (address[] memory);
+    function getJackpot(uint256 lotteryId) external view returns (uint256);
+    function getLottery(uint256 lotteryId) external view returns (LotteryStruct memory);
+
 }
 
+interface ILotteryGame {
+    function drawWinners(uint256 lotteryId, uint256 numberOfWinners) external payable;
+}
 
 contract LotteryManager is Ownable, ILotteryManager {
+    ILotteryGame public game;
     uint256 private _totalLotteries;
+    uint256 private constant MAX_WINNERS = 50;
+    uint256 public platformBalance;
 
     // mappings
     mapping(uint256 => LotteryStruct) private lotteries;
@@ -66,8 +75,19 @@ contract LotteryManager is Ownable, ILotteryManager {
         _;
     }
 
+    modifier onlyGame() {
+        if(address(game) != msg.sender) {
+            revert OnlyGame("Only callable by lottery game!");
+        }
+        _;
+    }
     constructor() Ownable(msg.sender){}
 
+    function setGame (address _game) public onlyOwner{
+        game = ILotteryGame(_game);
+     }
+
+    // everyone can create a Lottery
     function createLottery(
         string memory title,
         string memory description,
@@ -90,7 +110,7 @@ contract LotteryManager is Ownable, ILotteryManager {
             description: description,
             ticketPrice: ticketPrice,
             servicePercent: servicePercent,
-            participants: 0,
+            numOfParticipants: 0,
             drawn: false,
             owner: msg.sender,
             createdAt: block.timestamp,
@@ -107,7 +127,7 @@ contract LotteryManager is Ownable, ILotteryManager {
     // owner uploads n lucky numbers
     function importLuckyNumbers(uint256 lotteryId, string[] memory luckyNumbers) external onlyLotteryOwner(lotteryId) {
         if (lotteryLuckyNumbers[lotteryId].length != 0) revert SimpleError("Already imported");
-        if(lotteries[lotteryId].participants != 0) revert SimpleError("Participants already joined");
+        if(lotteries[lotteryId].numOfParticipants != 0) revert SimpleError("Participants already joined");
         if(luckyNumbers.length == 0) revert SimpleError("Empty list");
 
         for (uint256 i = 0; i < luckyNumbers.length; i++) {
@@ -119,11 +139,13 @@ contract LotteryManager is Ownable, ILotteryManager {
         emit LuckyNumbersImported(lotteryId, luckyNumbers.length);
     }
 
-    // function callable by anyone, where
+    // function callable by anyone
     function buyTicket(uint256 lotteryId, uint256 luckyNumberIndex) external payable {
         // reference lottery on chain
         LotteryStruct storage lottery = lotteries[lotteryId];
         if(msg.value < lottery.ticketPrice) revert SimpleError("Insufficient ETH");
+        if(block.timestamp > lottery.expiresAt) revert SimpleError("Cannot buy Tickets anymore.");
+        if(lottery.drawn) revert SimpleError("Lottery already drawn!");
 
         LuckyNumber storage luckyNumber = lotteryLuckyNumbers[lotteryId][luckyNumberIndex];
         // use index, because it is more gas friendly than string comparison using hashing
@@ -136,10 +158,25 @@ contract LotteryManager is Ownable, ILotteryManager {
             })
         );
 
-        lottery.participants++;
+        lottery.numOfParticipants++;
         luckyNumber.isUsed = true;
 
         emit TicketBought(lotteryId, msg.sender);
+    }
+
+    // draw winners
+    function drawWinners(uint256 lotteryId, uint256 numberOfWinners) external onlyLotteryOwner(lotteryId) {
+        ILotteryManager.LotteryStruct storage lottery = lotteries[lotteryId];
+        if(lottery.drawn) revert SimpleError ("Lottery already drawn");
+        if(block.timestamp < lottery.expiresAt) revert SimpleError ("Lottery not expired yet");
+        if(numberOfWinners < 1) revert SimpleError("Must have at least one winner");
+        if(numberOfWinners > lottery.numOfParticipants || numberOfWinners > MAX_WINNERS)
+            revert SimpleError ("Too many winners");
+
+        // forward to game
+        uint256 jackpot = lottery.ticketPrice * lottery.numOfParticipants;
+        lottery.drawn = true;
+        game.drawWinners{ value: jackpot }(lotteryId, numberOfWinners);    
     }
 
     function getAvailableLuckyNumbers(uint256 lotteryId) external view returns (string[] memory available) {
@@ -169,14 +206,24 @@ contract LotteryManager is Ownable, ILotteryManager {
         return lotteries[lotteryId];
     }
 
-    // getter for the lottery participants
-    function getParticipants(uint256 lotteryId) external view returns (ParticipationStruct[] memory) {
-        return lotteryParticipants[lotteryId];
+    // getter for the lottery numOfParticipant
+    function getLotteryParticipants(uint256 lotteryId) external view returns (address[] memory) {
+        address[] memory _participations = new address[](lotteryParticipants[lotteryId].length);
+         for (uint256 i = 0; i < lotteryParticipants[lotteryId].length; ++i) {
+            _participations[i] = lotteryParticipants[lotteryId][i].account;
+        }
+        return _participations;
     }
 
-    function getPrize(uint256 lotteryId) external view returns (uint256) {
+    function getJackpot(uint256 lotteryId) external view returns (uint256) {
         LotteryStruct storage lottery = lotteries[lotteryId];
-        return lottery.ticketPrice * lottery.participants;
+        return lottery.ticketPrice * lottery.numOfParticipants;
+    }
+
+    function getLuckyNumbers(uint256 lotteryId) external view returns (LuckyNumber[] memory) {
+        return lotteryLuckyNumbers[lotteryId];
     }
 
 }
+
+
