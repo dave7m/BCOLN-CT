@@ -21,6 +21,7 @@ git checkout -b #{issue_number}_{short_description}
 ```
 
 **Example:**
+
 ```bash
 git checkout -b #42_add-wallet-connect
 ```
@@ -64,6 +65,7 @@ This keeps the commit history clean.
 > 📘 [Git rebase guide](https://www.atlassian.com/git/tutorials/rewriting-history/git-rebase)
 
 If you run into conflicts:
+
 - Fix them
 - `git add .`
 - Continue with: `git rebase --continue`
