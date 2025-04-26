@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: UNLICENSED
-pragma solidity ^0.8.20;
+pragma solidity ^0.8.17;
 
 // this contract only shows you how to use it. It is not part of the project and will later be deleted!
 contract HelloWorldContract {

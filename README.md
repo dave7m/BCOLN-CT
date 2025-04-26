@@ -9,7 +9,7 @@ A decentralized lottery application built with Solidity smart contracts, a Next.
 ```
 .
 ├── contracts/       # Solidity smart contracts
-├── frontend/        # Next.js frontend app
+├── components/        # Next.js frontend app
 ├── deploy/          # Hardhat scripts for deployment & interaction
 ├── test/            # Smart contract test files
 ├── offchain/        # Off-chain oracle / IPFS integrations
@@ -32,7 +32,7 @@ A decentralized lottery application built with Solidity smart contracts, a Next.
 
 ### 🚀 Install Dependencies
 
-Run this from the root of the project:
+1. Run this from the root of the project:
 
 ```bash
 yarn install
@@ -41,6 +41,29 @@ yarn install
 This will install dependencies for:
 - Root (Hardhat + Solidity)
 - `frontend/` workspace (React, Next.js, etc.)
+
+2. Start Local Node and Deploy Contracts
+
+   Step 1: Start the Hardhat Local Node
+   In Terminal #1, run:
+```bash
+yarn hardhat node
+```
+   Step 2: Deploy Contracts
+   In Terminal #2, run the following commands:
+```bash
+# Deploy base contracts
+yarn hardhat run scripts/deploy.js
+
+# Deploy example contract (optional)
+yarn hardhat run deploy/deployExample.ts
+```
+
+Then open your browser at: http://localhost:3000
+
+**_Temporarily ignore the following content._**
+
+
 
 ---
 
@@ -60,7 +83,7 @@ yarn clean
 
 ### 🚀 Deploy Locally (testnet / localhost)
 
-For deploying contracts to a blockchain, we need to use the private_key of an account. 
+For deploying contracts to a blockchain, we need to use the private_key of an account.
 Please create a `env.local` file, where you can store your private keys. Do not expose
 them outside of this. Also, you must give the RPC_URL a blockchain.
 Your `env.local` file should then look like this:
@@ -74,12 +97,12 @@ TEST_NET=http://127.0.0.1:7545
 yarn deploy:local
 ```
 
-*(Customize your Hardhat networks in `hardhat.config.js`)*
+_(Customize your Hardhat networks in `hardhat.config.js`)_
 
 Once you have deployed a contract, you can interact with it:
 ```js
-const contract = await ethers.getContractAt("HelloWorldContract", "0x...")
-await contract.getMessage()
+const contract = await ethers.getContractAt("HelloWorldContract", "0x...");
+await contract.getMessage();
 ```
 
 ---
