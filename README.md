@@ -52,11 +52,9 @@ yarn hardhat node
    Step 2: Deploy Contracts
    In Terminal #2, run the following commands:
 ```bash
-# Deploy base contracts
-yarn hardhat run scripts/deploy.js
-
-# Deploy example contract (optional)
 yarn hardhat run deploy/deployExample.ts
+
+yarn dev
 ```
 
 Then open your browser at: http://localhost:3000
