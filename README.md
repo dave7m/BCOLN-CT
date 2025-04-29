@@ -42,14 +42,36 @@ This will install dependencies for:
 - Root (Hardhat + Solidity)
 - `frontend/` workspace (React, Next.js, etc.)
 
-2. Start Local Node and Deploy Contracts
+2. Start Local Node
 
-   Step 1: Start the Hardhat Local Node
+   Start the Hardhat Local Node
    In Terminal #1, run:
 ```bash
 yarn hardhat node
 ```
-   Step 2: Deploy Contracts
+3. Add Local Network to MetaMask
+
+   Open MetaMask and go to **Settings > Networks > Add a network manually**. Enter:
+
+   - **Network Name:** `Hardhat Localhost`
+   - **New RPC URL:** `http://127.0.0.1:8545`
+   - **Chain ID:** `31337` *(Hardhat's default)*
+   - **Currency Symbol:** `ETH` *(optional)*
+   - **Block Explorer URL:** *(leave blank)*
+
+4. Import a Test Account into MetaMask
+
+   When the Hardhat node starts, it displays 20 unlocked accounts with private keys. Example:
+
+   ```
+   Account #0: 0xabc...123
+   Private Key: 0xabc...def
+   ```
+
+   - In MetaMask, go to the **Account menu > Import Account**
+   - Paste one of the private keys from the terminal output
+
+5. Deploy Contracts
    In Terminal #2, run the following commands:
 ```bash
 yarn hardhat run deploy/deployExample.ts
@@ -58,6 +80,8 @@ yarn dev
 ```
 
 Then open your browser at: http://localhost:3000
+
+Now you can connect your MetaMask wallet to the local Hardhat node and create jackpot.
 
 **_Temporarily ignore the following content._**
 

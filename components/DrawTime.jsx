@@ -112,15 +112,7 @@ const DrawTime = ({ jackpot, luckyNumbers, participants }) => {
                 Generate Lucky Numbers
               </button>
 
-              {!group ? (
-                <button
-                  onClick={handleGroupCreation}
-                  className="flex flex-nowrap border py-2 px-4 rounded-full bg-gray-500
-                hover:bg-rose-600 font-semibold text-white"
-                >
-                  Create Group
-                </button>
-              ) : null}
+
             </>
           ) : group && !group.hasJoined ? (
             <button
@@ -140,23 +132,7 @@ const DrawTime = ({ jackpot, luckyNumbers, participants }) => {
             Draw Result
           </Link>
 
-          {!currentUser ? (
-            <button
-              onClick={() => dispatch(setAuthModal('scale-100'))}
-              className="flex flex-nowrap border py-2 px-4 rounded-full bg-green-500
-                hover:bg-amber-600 font-semibold"
-            >
-              Login Chat
-            </button>
-          ) : (
-            <button
-              onClick={() => dispatch(setChatModal('scale-100'))}
-              className="flex flex-nowrap border py-2 px-4 rounded-full bg-green-500
-            hover:bg-amber-600 font-semibold"
-            >
-              Enter Chat
-            </button>
-          )}
+
         </div>
       </div>
 
