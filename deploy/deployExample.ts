@@ -9,7 +9,7 @@ async function main() {
   await contract.deployed()
 
   const address = JSON.stringify({ address: contract.address }, null, 4)
-  fs.writeFile('./artifacts/contractAddress.json', address, 'utf8', (err) => {
+  fs.writeFile('./artifacts/contractAddress.json', address, 'utf8', (err: any) => {
     if (err) {
       console.error(err)
       return

@@ -10,7 +10,7 @@ import {
   getPurchasedNumbers,
 } from '@/services/blockchain.srr'
 import { ethers } from 'ethers'
-import { logOutWithCometChat } from './chat'
+
 
 const {
   updateWallet,

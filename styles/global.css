@@ -18,3 +18,12 @@ a {
 * {
   box-sizing: border-box;
 }
+
+@layer components {
+  .input-style {
+    @apply w-full px-4 py-3 border border-slate-300 rounded-md shadow-sm
+    text-slate-800 placeholder-slate-400
+    focus:outline-none focus:ring-2 focus:ring-blue-500
+    focus:border-blue-500 transition;
+  }
+}
