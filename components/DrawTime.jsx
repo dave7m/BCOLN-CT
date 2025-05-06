@@ -6,7 +6,6 @@ import Countdown from '@/components/Countdown'
 import { buyTicket } from '@/services/blockchain'
 import { useDispatch, useSelector } from 'react-redux'
 import { globalActions } from '@/store/global_reducer'
-import { createNewGroup, joinGroup } from '@/services/chat'
 
 const DrawTime = ({ jackpot, luckyNumbers, participants }) => {
   const { setGeneratorModal, setAuthModal, setChatModal, setGroup } = globalActions
@@ -19,57 +18,55 @@ const DrawTime = ({ jackpot, luckyNumbers, participants }) => {
   const handlePurchase = async (luckyNumberId) => {
     if (!wallet) return toast.warning('Connect your wallet')
     await toast.promise(
-      new Promise(async (resolve, reject) => {
-        await buyTicket(jackpotId, luckyNumberId, jackpot?.ticketPrice)
-          .then(async () => {
-            resolve()
-          })
-          .catch(() => reject())
-      }),
-      {
-        pending: 'Approve transaction...',
-        success: 'Ticket purchased successfully 👌',
-        error: 'Encountered error 🤯',
-      }
+        new Promise(async (resolve, reject) => {
+          await buyTicket(jackpotId, luckyNumberId, jackpot?.ticketPrice)
+              .then(async () => resolve())
+              .catch(() => reject())
+        }),
+        {
+          pending: 'Approve transaction...',
+          success: 'Ticket purchased successfully 👌',
+          error: 'Encountered error 🤯',
+        }
     )
   }
 
   const handleGroupCreation = async () => {
     if (!currentUser) return toast.warning('Please authenticate chat')
     await toast.promise(
-      new Promise(async (resolve, reject) => {
-        await createNewGroup(CometChat, `guid_${jackpot?.id}`, jackpot?.title)
-          .then((group) => {
-            dispatch(setGroup(JSON.parse(JSON.stringify(group))))
-            resolve()
-          })
-          .catch(() => reject())
-      }),
-      {
-        pending: 'Creating group...',
-        success: 'Group created successfully 👌',
-        error: 'Encountered error 🤯',
-      }
+        new Promise(async (resolve, reject) => {
+          await createNewGroup(CometChat, `guid_${jackpot?.id}`, jackpot?.title)
+              .then((group) => {
+                dispatch(setGroup(JSON.parse(JSON.stringify(group))))
+                resolve()
+              })
+              .catch(() => reject())
+        }),
+        {
+          pending: 'Creating group...',
+          success: 'Group created successfully 👌',
+          error: 'Encountered error 🤯',
+        }
     )
   }
 
   const handleGroupJoin = async () => {
     if (!currentUser) return toast.warning('Please authenticate chat')
     await toast.promise(
-      new Promise(async (resolve, reject) => {
-        await joinGroup(CometChat, `guid_${jackpot?.id}`)
-          .then((group) => {
-            dispatch(setGroup(JSON.parse(JSON.stringify(group))))
-            resolve()
-            window.location.reload()
-          })
-          .catch(() => reject())
-      }),
-      {
-        pending: 'Joining group...',
-        success: 'Group joined successfully 👌',
-        error: 'Encountered error 🤯',
-      }
+        new Promise(async (resolve, reject) => {
+          await joinGroup(CometChat, `guid_${jackpot?.id}`)
+              .then((group) => {
+                dispatch(setGroup(JSON.parse(JSON.stringify(group))))
+                resolve()
+                window.location.reload()
+              })
+              .catch(() => reject())
+        }),
+        {
+          pending: 'Joining group...',
+          success: 'Group joined successfully 👌',
+          error: 'Encountered error 🤯',
+        }
     )
   }
 
@@ -79,109 +76,95 @@ const DrawTime = ({ jackpot, luckyNumbers, participants }) => {
   }
 
   return (
-    <div className="py-10 px-5 bg-slate-100">
-      <div className="flex flex-col items-center justify-center text-center py-10">
-        <h4 className="text-4xl text-slate-700 text-center font-bold pb-3">
-          Buy Lottery Tickets Online
-        </h4>
-        <p className="text-lg text-gray-600 font-semibold capitalize">{jackpot?.title}</p>
-        <p className="text-sm text-gray-500 w-full sm:w-2/3">{jackpot?.description}</p>
-        <p className="text-sm font-medium text-black w-full sm:w-2/3">
-          {jackpot?.participants} participants
-        </p>
-      </div>
+      <div className="py-10 px-5 bg-slate-100">
+        <div className="flex flex-col items-center justify-center text-center py-10 space-y-3">
+          <h4 className="text-4xl text-slate-800 font-bold">Buy Lottery Tickets Online</h4>
+          <p className="text-lg text-slate-600 font-medium">{jackpot?.title}</p>
+          <p className="text-sm text-slate-500 w-full sm:w-2/3">{jackpot?.description}</p>
+          <p className="text-sm font-medium text-slate-700">{jackpot?.participants} participants</p>
+        </div>
 
-      <div className="flex flex-col justify-center items-center space-y-4 mb-6">
-        {jackpot?.expiresAt ? <Countdown timestamp={jackpot?.expiresAt} /> : null}
+        <div className="flex flex-col justify-center items-center space-y-4 mb-8">
+          {jackpot?.expiresAt && <Countdown timestamp={jackpot?.expiresAt} />}
 
-        <div className="flex justify-center items-center space-x-2">
-          {wallet?.toLowerCase() == jackpot?.owner ? (
-            <>
-              <button
-                disabled={jackpot?.expiresAt < Date.now()}
-                onClick={onGenerate}
-                className={`flex flex-nowrap border py-2 px-4 rounded-full bg-amber-500
-                hover:bg-rose-600 font-semibold
-                ${
-                  jackpot?.expiresAt < Date.now()
-                    ? 'opacity-50 cursor-not-allowed'
-                    : 'hover:bg-rose-600'
-                }
-                `}
-              >
-                Generate Lucky Numbers
-              </button>
+          <div className="flex justify-center items-center flex-wrap gap-4">
+            {wallet?.toLowerCase() == jackpot?.owner && (
+                <button
+                    disabled={jackpot?.expiresAt < Date.now()}
+                    onClick={onGenerate}
+                    className={`bg-amber-500 text-white text-sm font-semibold py-2 px-4 rounded-full border border-transparent transition ${
+                        jackpot?.expiresAt < Date.now()
+                            ? 'opacity-50 cursor-not-allowed'
+                            : 'hover:bg-rose-600'
+                    }`}
+                >
+                  Generate Lucky Numbers
+                </button>
+            )}
 
+            {group && !group.hasJoined && (
+                <button
+                    onClick={handleGroupJoin}
+                    className="bg-gray-500 text-white text-sm font-semibold py-2 px-4 rounded-full hover:bg-rose-600 transition"
+                >
+                  Join Group
+                </button>
+            )}
 
-            </>
-          ) : group && !group.hasJoined ? (
-            <button
-              onClick={handleGroupJoin}
-              className="flex flex-nowrap border py-2 px-4 rounded-full bg-gray-500
-                hover:bg-rose-600 font-semibold text-white"
+            <Link
+                href={`/results/` + jackpot?.id}
+                className="bg-[#0c2856] text-white text-sm font-semibold py-2 px-4 rounded-full hover:bg-[#1a396c] transition"
             >
-              Join Group
-            </button>
-          ) : null}
-
-          <Link
-            href={`/results/` + jackpot?.id}
-            className="flex flex-nowrap border py-2 px-4 rounded-full bg-[#0c2856]
-            hover:bg-[#1a396c] cursor-pointer font-semibold text-white"
-          >
-            Draw Result
-          </Link>
-
-
-        </div>
-      </div>
-
-      <div className="bg-white text-sm overflow-x-auto flex flex-col w-full sm:w-3/4 mx-auto p-5 rounded-md">
-        <div className="pb-4 text-center">
-          <p className="semibold text-2xl">Select Your winning Lottery Numbers</p>
+              Draw Result
+            </Link>
+          </div>
         </div>
 
-        <table className="table-auto">
-          <thead className="max-h-80 overflow-y-auto block">
-            <tr className="flex justify-between text-left">
-              <th className="px-4 py-2 ">#</th>
-              <th className="px-4 py-2 ">Ticket Price</th>
-              <th className="px-4 py-2 ">Draw Date</th>
-              <th className="px-4 py-2 ">Ticket Number</th>
-              <th className="px-4 py-2 ">Action</th>
+        <div className="bg-white rounded-xl shadow-md w-full sm:w-3/4 mx-auto p-6 overflow-x-auto text-sm">
+          <p className="text-center text-2xl font-semibold text-slate-700 mb-4">
+            Select Your Winning Lottery Numbers
+          </p>
+          <table className="table-auto w-full">
+            <thead>
+            <tr className="text-left text-slate-600 font-semibold border-b">
+              <th className="py-3 px-4">#</th>
+              <th className="py-3 px-4">Ticket Price</th>
+              <th className="py-3 px-4">Draw Date</th>
+              <th className="py-3 px-4">Ticket Number</th>
+              <th className="py-3 px-4">Action</th>
             </tr>
-          </thead>
-          <tbody className="max-h-80 overflow-y-auto block">
+            </thead>
+            <tbody>
             {luckyNumbers?.map((luckyNumber, i) => (
-              <tr className="flex justify-between border-b text-left" key={i}>
-                <td className="px-4 py-2 font-semibold">{i + 1}</td>
-                <td className="px-4 py-2 font-semibold">
-                  <div className="flex justify-center items-center space-x-1">
-                    <FaEthereum />
-                    <span>{jackpot?.ticketPrice}</span>
-                  </div>
-                </td>
-                <td className="px-4 py-2 font-semibold">{jackpot?.drawsAt}</td>
-                <td className="px-4 py-2 font-semibold">{luckyNumber}</td>
-                <td className="px-4 py-2 font-semibold">
-                  <button
-                    disabled={participants.includes(luckyNumber)}
-                    onClick={() => handlePurchase(i)}
-                    className={`bg-black ${
-                      participants.includes(luckyNumber)
-                        ? 'opacity-50 cursor-not-allowed'
-                        : 'hover:bg-rose-600'
-                    } text-white text-sm py-2 px-4 rounded-full`}
-                  >
-                    BUY NOW
-                  </button>
-                </td>
-              </tr>
+                <tr key={i} className="border-b text-slate-700">
+                  <td className="py-3 px-4 font-medium">{i + 1}</td>
+                  <td className="py-3 px-4">
+                    <div className="flex items-center space-x-1">
+                      <FaEthereum className="text-amber-500" />
+                      <span>{jackpot?.ticketPrice}</span>
+                    </div>
+                  </td>
+                  <td className="py-3 px-4">{jackpot?.drawsAt}</td>
+                  <td className="py-3 px-4">{luckyNumber}</td>
+                  <td className="py-3 px-4">
+                    <button
+                        disabled={participants.includes(luckyNumber)}
+                        onClick={() => handlePurchase(i)}
+                        className={`bg-black text-white text-sm py-2 px-4 rounded-full transition ${
+                            participants.includes(luckyNumber)
+                                ? 'opacity-50 cursor-not-allowed'
+                                : 'hover:bg-rose-600'
+                        }`}
+                    >
+                      BUY NOW
+                    </button>
+                  </td>
+                </tr>
             ))}
-          </tbody>
-        </table>
+            </tbody>
+          </table>
+        </div>
       </div>
-    </div>
   )
 }
 
