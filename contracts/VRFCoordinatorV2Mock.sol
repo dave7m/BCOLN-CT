@@ -2,9 +2,10 @@
 pragma solidity ^0.8.20;
 
 import { VRFCoordinatorV2Interface } from "@chainlink/contracts/src/v0.8/vrf/interfaces/VRFCoordinatorV2Interface.sol";
-
 contract VRFCoordinatorV2Mock is VRFCoordinatorV2Interface {
   uint256 private nextRequestId = 1;
+  event RandomWordsRequested(uint256 requestId);
+
   function requestRandomWords(
     bytes32 ,
     uint64 ,
@@ -13,6 +14,7 @@ contract VRFCoordinatorV2Mock is VRFCoordinatorV2Interface {
     uint32
   ) external override returns (uint256 requestId) {
     requestId = nextRequestId++;
+    emit RandomWordsRequested(requestId);
   }
 
   // helper for tests

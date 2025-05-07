@@ -1,19 +1,19 @@
-import '@/styles/global.css'
-import { store } from '../store'
-import { AppProps } from 'next/app'
-import { Provider } from 'react-redux'
-import { useEffect, useState } from 'react'
-import 'react-toastify/dist/ReactToastify.css'
-import { ToastContainer } from 'react-toastify'
+import "@/styles/global.css";
+import { store } from "../store";
+import { AppProps } from "next/app";
+import { Provider } from "react-redux";
+import { useEffect, useState } from "react";
+import "react-toastify/dist/ReactToastify.css";
+import { ToastContainer } from "react-toastify";
 
 export default function MyApp({ Component, pageProps }: AppProps) {
-  const [showChild, setShowChild] = useState(false)
+  const [showChild, setShowChild] = useState(false);
   useEffect(() => {
-    setShowChild(true)
-  }, [])
+    setShowChild(true);
+  }, []);
 
   if (!showChild) {
-    return null
+    return null;
   } else {
     return (
       <Provider store={store}>
@@ -32,6 +32,6 @@ export default function MyApp({ Component, pageProps }: AppProps) {
           theme="dark"
         />
       </Provider>
-    )
+    );
   }
 }

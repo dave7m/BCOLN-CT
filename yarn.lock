@@ -5363,7 +5363,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"ethers@npm:^5.4.7, ethers@npm:^5.7.0, ethers@npm:^5.7.2":
+"ethers@npm:^5.7.0, ethers@npm:^5.7.2":
   version: 5.8.0
   resolution: "ethers@npm:5.8.0"
   dependencies:
@@ -5401,7 +5401,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"ethers@npm:^6.7.0":
+"ethers@npm:^6.13.5, ethers@npm:^6.7.0":
   version: 6.14.0
   resolution: "ethers@npm:6.14.0"
   dependencies:
@@ -11049,7 +11049,7 @@ __metadata:
     eslint-config-next: 13.1.2
     eslint-config-prettier: ^10.1.1
     eslint-plugin-prettier: ^5.2.5
-    ethers: ^5.4.7
+    ethers: ^6.13.5
     hardhat: ^2.22.19
     hardhat-deploy: ^1.0.1
     hardhat-gas-reporter: ^1.0.8

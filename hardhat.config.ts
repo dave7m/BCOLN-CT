@@ -6,7 +6,7 @@ import * as dotenv from "dotenv";
 dotenv.config();
 dotenv.config({ path: ".env.local" });
 
-const localhost_url = process.env.LCOALHOST || "";
+const localhost_url = process.env.LOCALHOST || "";
 const localhost_user_1_private_key =
   process.env.LOCALHOST_USER_1_PRIVATE_KEY || "";
 const localhost_user_2_private_key =
@@ -31,6 +31,7 @@ const config: HardhatUserConfig = {
   networks: {
     localhost: {
       url: localhost_url,
+      chainId: 31337,
       accounts: [
         localhost_user_1_private_key,
         localhost_user_2_private_key,
