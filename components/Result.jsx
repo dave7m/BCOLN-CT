@@ -50,7 +50,7 @@ const Result = ({ jackpot, participants, result }) => {
         <div className="flex flex-wrap justify-center items-center gap-3">
           {wallet?.toLowerCase() === jackpot?.owner && (
             <button
-              // disabled={jackpot?.expiresAt > Date.now()}
+              disabled={jackpot?.expiresAt > Date.now()}
               onClick={() => dispatch(setWinnerModal("scale-100"))}
               className={`bg-amber-500 text-white text-sm font-semibold py-2 px-4 rounded-full border border-transparent transition ${
                 jackpot?.expiresAt > Date.now()
