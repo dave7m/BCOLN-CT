@@ -1,53 +1,56 @@
-import { useState } from 'react'
-import { toast } from 'react-toastify'
-import { useRouter } from 'next/router'
-import { FaTimes } from 'react-icons/fa'
-import { exportLuckyNumbers } from '@/services/blockchain'
-import { useSelector, useDispatch } from 'react-redux'
-import { globalActions } from '@/store/global_reducer'
+import { useState } from "react";
+import { toast } from "react-toastify";
+import { useRouter } from "next/router";
+import { FaTimes } from "react-icons/fa";
+import { exportLuckyNumbers } from "@/services/blockchain";
+import { useSelector, useDispatch } from "react-redux";
+import { globalActions } from "@/store/global_reducer";
 
 const Generator = () => {
-  const router = useRouter()
-  const dispatch = useDispatch()
-  const { jackpotId } = router.query
-  const { setGeneratorModal } = globalActions
-  const [luckyNumbers, setLuckyNumbers] = useState('')
-  const { generatorModal } = useSelector((state) => state.globalState)
+  const router = useRouter();
+  const dispatch = useDispatch();
+  const { jackpotId } = router.query;
+  const { setGeneratorModal } = globalActions;
+  const [luckyNumbers, setLuckyNumbers] = useState("");
+  const { generatorModal } = useSelector((state) => state.globalState);
 
   const handleSubmit = async (e) => {
-    e.preventDefault()
+    e.preventDefault();
 
     await toast.promise(
       new Promise(async (resolve, reject) => {
         await exportLuckyNumbers(jackpotId, generateLuckyNumbers(luckyNumbers))
           .then(async () => {
-            setLuckyNumbers('')
-            dispatch(setGeneratorModal('scale-0'))
-            resolve()
+            setLuckyNumbers("");
+            dispatch(setGeneratorModal("scale-0"));
+            resolve();
           })
-          .catch(() => reject())
+          .catch(() => reject());
       }),
       {
-        pending: 'Approve transaction...',
-        success: 'Lucky numbers saved to chain 👌',
-        error: 'Encountered error 🤯',
-      }
-    )
-  }
+        pending: "Approve transaction...",
+        success: "Lucky numbers saved to chain 👌",
+        error: "Encountered error 🤯",
+      },
+    );
+  };
 
   const generateLuckyNumbers = (count) => {
-    const result = []
-    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'
-    const charactersLength = characters.length
+    const result = [];
+    const characters =
+      "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+    const charactersLength = characters.length;
     for (let i = 0; i < count; i++) {
-      let string = ''
+      let string = "";
       for (let j = 0; j < 6; j++) {
-        string += characters.charAt(Math.floor(Math.random() * charactersLength))
+        string += characters.charAt(
+          Math.floor(Math.random() * charactersLength),
+        );
       }
-      result.push(string)
+      result.push(string);
     }
-    return result
-  }
+    return result;
+  };
 
   return (
     <div
@@ -63,7 +66,7 @@ const Generator = () => {
           <div className="flex justify-between items-center">
             <p className="font-semibold">Generate Numbers</p>
             <button
-              onClick={() => dispatch(setGeneratorModal('scale-0'))}
+              onClick={() => dispatch(setGeneratorModal("scale-0"))}
               type="button"
               className="border-0 bg-transparent focus:outline-none"
             >
@@ -100,7 +103,7 @@ const Generator = () => {
         </form>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default Generator
+export default Generator;

@@ -12,6 +12,7 @@ interface ILotteryManager {
         uint256 id;
         string title;
         string description;
+        string imageURL;
         uint256 ticketPrice;
         uint256 numOfParticipants;
         uint256 servicePercent;
@@ -32,6 +33,7 @@ interface ILotteryManager {
     function createLottery(
         string memory title,
         string memory description,
+        string memory imageURL,
         uint256 prize,
         uint256 ticketPrice,
         uint256 expiresAt
@@ -40,9 +42,11 @@ interface ILotteryManager {
     function importLuckyNumbers(uint256 id, string[] memory luckyNumbers) external;
     function buyTicket(uint256 id, uint256 luckyNumberIndex) external payable;
     function getAvailableLuckyNumbers(uint256 lotteryId) external view returns (string[] memory available);
-    function getLotteryParticipants(uint256 id) external view returns (address[] memory);
+    function getLotteryParticipantsAddresses(uint256 id) external view returns (address[] memory);
+    function getLotteryParticipants(uint256 id) external view returns (ParticipationStruct[] memory);
     function getJackpot(uint256 lotteryId) external view returns (uint256);
     function getLottery(uint256 lotteryId) external view returns (LotteryStruct memory);
+    function getLotteries() external view returns (LotteryStruct[] memory);
 
 }
 
@@ -91,6 +95,7 @@ contract LotteryManager is Ownable, ILotteryManager {
     function createLottery(
         string memory title,
         string memory description,
+        string memory imageURL,
         uint256 ticketPrice,
         uint256 servicePercent,
         uint256 expiresAt
@@ -100,13 +105,14 @@ contract LotteryManager is Ownable, ILotteryManager {
         if(ticketPrice == 0) revert SimpleError("Ticket Prize must be positive");
         if(expiresAt <= block.timestamp) revert SimpleError("Expiration must be in future");
 
-        _totalLotteries += 1;
         uint256 lotteryId = _totalLotteries;
+        _totalLotteries += 1;
 
         // create new lottery
         LotteryStruct memory newLottery = LotteryStruct({
             id: lotteryId,
             title: title,
+            imageURL: imageURL,
             description: description,
             ticketPrice: ticketPrice,
             servicePercent: servicePercent,
@@ -168,7 +174,7 @@ contract LotteryManager is Ownable, ILotteryManager {
     function drawWinners(uint256 lotteryId, uint256 numberOfWinners) external onlyLotteryOwner(lotteryId) {
         ILotteryManager.LotteryStruct storage lottery = lotteries[lotteryId];
         if(lottery.drawn) revert SimpleError ("Lottery already drawn");
-        if(block.timestamp < lottery.expiresAt) revert SimpleError ("Lottery not expired yet");
+//        if(block.timestamp < lottery.expiresAt) revert SimpleError ("Lottery not expired yet");
         if(numberOfWinners < 1) revert SimpleError("Must have at least one winner");
         if(numberOfWinners > lottery.numOfParticipants || numberOfWinners > MAX_WINNERS)
             revert SimpleError ("Too many winners");
@@ -206,11 +212,26 @@ contract LotteryManager is Ownable, ILotteryManager {
         return lotteries[lotteryId];
     }
 
+    function getLotteries() external view returns (LotteryStruct[] memory Lotteries) {
+        Lotteries = new LotteryStruct[](_totalLotteries);
+        for (uint256 i = 0; i < _totalLotteries; i++) {
+            Lotteries[i] = lotteries[i];
+        }
+    }
+
     // getter for the lottery numOfParticipant
-    function getLotteryParticipants(uint256 lotteryId) external view returns (address[] memory) {
+    function getLotteryParticipantsAddresses(uint256 lotteryId) external view returns (address[] memory) {
         address[] memory _participations = new address[](lotteryParticipants[lotteryId].length);
          for (uint256 i = 0; i < lotteryParticipants[lotteryId].length; ++i) {
             _participations[i] = lotteryParticipants[lotteryId][i].account;
+        }
+        return _participations;
+    }
+
+    function getLotteryParticipants(uint256 lotteryId) external view returns (ParticipationStruct[] memory) {
+        ParticipationStruct[] memory _participations = new ParticipationStruct[](lotteryParticipants[lotteryId].length);
+        for (uint256 i = 0; i < lotteryParticipants[lotteryId].length; ++i) {
+            _participations[i] = lotteryParticipants[lotteryId][i];
         }
         return _participations;
     }
@@ -220,10 +241,21 @@ contract LotteryManager is Ownable, ILotteryManager {
         return lottery.ticketPrice * lottery.numOfParticipants;
     }
 
-    function getLuckyNumbers(uint256 lotteryId) external view returns (LuckyNumber[] memory) {
-        return lotteryLuckyNumbers[lotteryId];
+    function getLuckyNumbers(uint256 lotteryId) external view returns (string[] memory luckyNumbers) {
+        luckyNumbers = new string[](lotteryLuckyNumbers[lotteryId].length);
+        for (uint256 i = 0; i < lotteryLuckyNumbers[lotteryId].length; ++i) {
+            luckyNumbers[i] = lotteryLuckyNumbers[lotteryId][i].number;
+        }
+        return luckyNumbers;
     }
 
+    function getTotalLotteries() external view returns (uint256) {
+        return _totalLotteries;
+    }
+
+    function getBalance() public view returns (uint256) {
+        return address(this).balance;
+    }
 }
 
 

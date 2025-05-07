@@ -1,39 +1,39 @@
-import { useState } from 'react'
-import { toast } from 'react-toastify'
-import { useRouter } from 'next/router'
-import { FaTimes } from 'react-icons/fa'
-import { performDraw } from '@/services/blockchain'
-import { useSelector, useDispatch } from 'react-redux'
-import { globalActions } from '@/store/global_reducer'
+import { useState } from "react";
+import { toast } from "react-toastify";
+import { useRouter } from "next/router";
+import { FaTimes } from "react-icons/fa";
+import { performDraw } from "@/services/blockchain";
+import { useSelector, useDispatch } from "react-redux";
+import { globalActions } from "@/store/global_reducer";
 
 const Winners = () => {
-  const router = useRouter()
-  const dispatch = useDispatch()
-  const { resultId } = router.query
-  const { setWinnerModal } = globalActions
-  const [numberOfwinner, setNumberOfwinner] = useState('')
-  const { winnerModal } = useSelector((state) => state.globalState)
+  const router = useRouter();
+  const dispatch = useDispatch();
+  const { resultId } = router.query;
+  const { setWinnerModal } = globalActions;
+  const [numberOfwinner, setNumberOfwinner] = useState("");
+  const { winnerModal } = useSelector((state) => state.globalState);
 
   const handleSubmit = async (e) => {
-    e.preventDefault()
+    e.preventDefault();
 
     await toast.promise(
       new Promise(async (resolve, reject) => {
         await performDraw(resultId, numberOfwinner)
           .then(async () => {
-            setNumberOfwinner('')
-            dispatch(setWinnerModal('scale-0'))
-            resolve()
+            setNumberOfwinner("");
+            dispatch(setWinnerModal("scale-0"));
+            resolve();
           })
-          .catch(() => reject())
+          .catch(() => reject());
       }),
       {
-        pending: 'Approve transaction...',
-        success: 'Draw performed successfully 👌',
-        error: 'Encountered error 🤯',
-      }
-    )
-  }
+        pending: "Approve transaction...",
+        success: "Draw performed successfully 👌",
+        error: "Encountered error 🤯",
+      },
+    );
+  };
 
   return (
     <div
@@ -49,7 +49,7 @@ const Winners = () => {
           <div className="flex justify-between items-center">
             <p className="font-semibold">Emerging Winners</p>
             <button
-              onClick={() => dispatch(setWinnerModal('scale-0'))}
+              onClick={() => dispatch(setWinnerModal("scale-0"))}
               type="button"
               className="border-0 bg-transparent focus:outline-none"
             >
@@ -86,7 +86,7 @@ const Winners = () => {
         </form>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default Winners
+export default Winners;

@@ -1,6 +1,7 @@
 import { DeployFunction } from "hardhat-deploy/types";
 import { ethers } from "hardhat";
 import { HardhatRuntimeEnvironment } from "hardhat/types";
+import fs from "fs";
 
 const deployLotteryContracts: DeployFunction = async function (
   hre: HardhatRuntimeEnvironment,
@@ -48,6 +49,16 @@ const deployLotteryContracts: DeployFunction = async function (
   const tx = await manager.setGame(gameDeployment.address);
   await tx.wait();
   log(`Linked manager with game via setGame(${gameDeployment.address})`);
+
+  const addresses = {
+    LotteryManager: managerDeployment.address,
+    LotteryGame: gameDeployment.address,
+  };
+  fs.writeFileSync(
+    "./artifacts/contractAddresses.json",
+    JSON.stringify(addresses, null, 2),
+  );
+  log("Saved contract addresses to ./artifacts/contractAddresses.json");
 };
 
 export default deployLotteryContracts;

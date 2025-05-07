@@ -47,18 +47,20 @@ Installs packages for both:
 
    Start the Hardhat Local Node
    In Terminal #1, run:
+
 ```bash
 yarn hardhat node
 ```
+
 3. Add Local Network to MetaMask
 
    Open MetaMask and go to **Settings > Networks > Add a network manually**. Enter:
 
    - **Network Name:** `Hardhat Localhost`
    - **New RPC URL:** `http://127.0.0.1:8545`
-   - **Chain ID:** `31337` *(Hardhat's default)*
-   - **Currency Symbol:** `ETH` *(optional)*
-   - **Block Explorer URL:** *(leave blank)*
+   - **Chain ID:** `31337` _(Hardhat's default)_
+   - **Currency Symbol:** `ETH` _(optional)_
+   - **Block Explorer URL:** _(leave blank)_
 
 4. Import a Test Account into MetaMask
 
@@ -74,6 +76,7 @@ yarn hardhat node
 
 5. Deploy Contracts
    In Terminal #2, run the following commands:
+
 ```bash
 yarn hardhat run deploy/deployExample.ts
 
@@ -85,8 +88,6 @@ Then open your browser at: http://localhost:3000
 Now you can connect your MetaMask wallet to the local Hardhat node and create jackpot.
 
 **_Temporarily ignore the following content._**
-
-
 
 ---
 

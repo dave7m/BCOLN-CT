@@ -37,13 +37,13 @@ contract LotteryGame is VRFConsumerBaseV2, Ownable, ReentrancyGuard {
     mapping(uint256 => uint256) public requestIdToLotteryPrizePool;
 
     mapping(address => uint256) public pendingWithdrawals;
-    event WinnersDrawn(uint256 indexed lotteryId, address[] winners, uint256 prizePerWinner, uint256 seed);
+    event WinnersDrawn(uint256 indexed lotteryId,  ILotteryManager.ParticipationStruct[] winners, uint256 prizePerWinner, uint256 seed);
     event Deposit(address indexed to, uint256 amount);
 
     struct LotteryResult {
         bool completed;
         uint256 timestamp;
-        address[] winners;
+        ILotteryManager.ParticipationStruct[] winners;
         uint256 prizePerWinner;
         uint256 seed;
     }
@@ -90,10 +90,10 @@ contract LotteryGame is VRFConsumerBaseV2, Ownable, ReentrancyGuard {
         uint256 numberOfWinners = requestIdToNumberOfWinners[requestId];
 
         ILotteryManager.LotteryStruct memory lottery = manager.getLottery(lotteryId);
-        address[] memory participants = manager.getLotteryParticipants(lotteryId);
+        ILotteryManager.ParticipationStruct[] memory participants = manager.getLotteryParticipants(lotteryId);
 
         // select winners
-        address[] memory winners = _selectWinners(participants, numberOfWinners, randomWords[0]);
+        ILotteryManager.ParticipationStruct[] memory winners = _selectWinners(participants, numberOfWinners, randomWords[0]);
 
         // calculate prizes
         uint256 totalPrize = requestIdToLotteryPrizePool[requestId];
@@ -102,8 +102,8 @@ contract LotteryGame is VRFConsumerBaseV2, Ownable, ReentrancyGuard {
 
         // 4) **deposit** into each recipient’s withdrawal balance
         for (uint256 i = 0; i < winners.length; i++) {
-            pendingWithdrawals[winners[i]] += prizePerWinner;
-            emit Deposit(winners[i], prizePerWinner);
+            pendingWithdrawals[winners[i].account] += prizePerWinner;
+            emit Deposit(winners[i].account, prizePerWinner);
         }
         // deposit the owner fee
         pendingWithdrawals[lottery.owner] += platformFee;
@@ -111,13 +111,16 @@ contract LotteryGame is VRFConsumerBaseV2, Ownable, ReentrancyGuard {
 
         emit WinnersDrawn(lotteryId, winners, prizePerWinner, randomWords[0]);
 
-        lotteryResults[lotteryId] = LotteryResult({
-           completed: true,
-            timestamp: block.timestamp,
-            winners: winners,
-            prizePerWinner: prizePerWinner,
-            seed: randomWords[0]
-        });
+
+        LotteryResult storage result = lotteryResults[lotteryId];
+        result.completed = true;
+        result.timestamp = block.timestamp;
+        result.prizePerWinner = prizePerWinner;
+        result.seed = randomWords[0];
+
+        for (uint256 i = 0; i < winners.length; i++) {
+            result.winners.push(winners[i]);
+        }
 
         // cleanup
         delete requestIdToLotteryId[requestId];
@@ -126,12 +129,12 @@ contract LotteryGame is VRFConsumerBaseV2, Ownable, ReentrancyGuard {
     }
 
 
-    function _selectWinners(address[] memory participants, uint256 _numberOfWinners, uint256 seed)
+    function _selectWinners(ILotteryManager.ParticipationStruct[] memory participants, uint256 _numberOfWinners, uint256 seed)
     private
     pure
-    returns (address[] memory)
+    returns (ILotteryManager.ParticipationStruct[] memory)
     {
-        address[] memory selected = new address[](_numberOfWinners);
+        ILotteryManager.ParticipationStruct[] memory selected = new ILotteryManager.ParticipationStruct[](_numberOfWinners);
         uint256[] memory indices = _fisherYates(participants.length, seed);
 
         for (uint256 i = 0; i < _numberOfWinners; i++) {
@@ -164,6 +167,12 @@ contract LotteryGame is VRFConsumerBaseV2, Ownable, ReentrancyGuard {
       (bool ok,) = payable(msg.sender).call{ value: amount }("");
       if(!ok) revert NoFunds();
     }
+
+    function getLotteryResults(uint256 lotteryId) external view returns (LotteryResult memory) {
+        return lotteryResults[lotteryId];
+    }
+
+
 
     receive() external payable {}
 }

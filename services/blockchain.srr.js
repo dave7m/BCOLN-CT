@@ -1,73 +1,88 @@
-const abi = require('../artifacts/contracts/DappLottery.sol/DappLottery.json')
-const address = require('../artifacts/contractAddress.json')
-const { ethers } = require('ethers')
+const managerAbi = require("../artifacts/contracts/LotteryManager.sol/LotteryManager.json");
+const gameAbi = require("../artifacts/contracts/LotteryGame.sol/LotteryGame.json");
+const {
+  LotteryGame: gameAddress,
+  LotteryManager: managerAddress,
+} = require("../artifacts/contractAddresses.json");
+const { formatEther, JsonRpcProvider, Contract, Wallet } = require("ethers");
+const fromWei = (num) => formatEther(num);
 
-const contractAddress = address.address
-const contractAbi = abi.abi
-const fromWei = (num) => ethers.utils.formatEther(num)
+const getEthereumContracts = async () => {
+  const provider = new JsonRpcProvider("http://localhost:8545");
+  const wallet = Wallet.createRandom().connect(provider);
 
-const getEtheriumContract = async () => {
-  const provider = new ethers.providers.JsonRpcProvider('http://localhost:8545')
-  const wallet = ethers.Wallet.createRandom()
+  const manager = new Contract(managerAddress, managerAbi.abi, wallet);
+  const game = new Contract(gameAddress, gameAbi.abi, wallet);
 
-  // Set the new account as the signer for the provider
-  const signer = provider.getSigner(wallet.address)
-  const contract = new ethers.Contract(contractAddress, contractAbi, signer)
-  return contract
-}
+  return { manager, game };
+};
 
 const getLotteries = async () => {
-  const lotteries = await (await getEtheriumContract()).functions.getLotteries()
-  return structureLotteries(lotteries[0])
-}
+  const { manager } = await getEthereumContracts();
+  const lotteries = await manager.getLotteries();
+  return structureLotteries(lotteries);
+};
+
 const getLottery = async (id) => {
-  const lottery = await (await getEtheriumContract()).functions.getLottery(id)
-  return structureLotteries([lottery[0]])[0]
-}
+  const { manager } = await getEthereumContracts();
+  const raw = await manager.getLottery(id);
+  return structureLotteries([raw])[0];
+};
 
-const getLuckyNumbers = async (id) => {
-  const luckyNumbers = await (await getEtheriumContract()).functions.getLotteryLuckyNumbers(id)
-  return luckyNumbers[0]
-}
-
-const getLotteryResult = async (id) => {
-  const lotterResult = await (await getEtheriumContract()).functions.getLotteryResult(id)
-  return structuredResult(lotterResult[0])
-}
+const getTotalLotteries = async () => {
+  const { manager } = await getEthereumContracts();
+  const raw = await manager.getTotalLotteries();
+  return raw;
+};
 
 const getParticipants = async (id) => {
-  const participants = await (await getEtheriumContract()).functions.getLotteryParticipants(id)
-  return structuredParticipants(participants[0])
-}
+  const { manager } = await getEthereumContracts();
+  const participants = await manager.getLotteryParticipants(id);
+  return structuredParticipants(participants);
+};
+
 const getPurchasedNumbers = async (id) => {
-  const participants = await (await getEtheriumContract()).functions.getLotteryParticipants(id)
-  return structuredNumbers(participants[0])
-}
+  const { manager } = await getEthereumContracts();
+  const participants = await manager.getLotteryParticipants(id);
+  return structuredNumbers(participants);
+};
+
+const getLuckyNumbers = async (id) => {
+  const { manager } = await getEthereumContracts();
+  const luckyNumbers = await manager.getLuckyNumbers(id);
+  return luckyNumbers;
+};
+
+const getLotteryResult = async (id) => {
+  const { game } = await getEthereumContracts();
+  const result = await game.getLotteryResults(id);
+  return structuredResult(result);
+};
 
 function formatDate(timestamp) {
-  const date = new Date(timestamp)
-  const daysOfWeek = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
+  const date = new Date(timestamp);
+  const daysOfWeek = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
   const monthsOfYear = [
-    'Jan',
-    'Feb',
-    'Mar',
-    'Apr',
-    'May',
-    'Jun',
-    'Jul',
-    'Aug',
-    'Sep',
-    'Oct',
-    'Nov',
-    'Dec',
-  ]
+    "Jan",
+    "Feb",
+    "Mar",
+    "Apr",
+    "May",
+    "Jun",
+    "Jul",
+    "Aug",
+    "Sep",
+    "Oct",
+    "Nov",
+    "Dec",
+  ];
 
-  const dayOfWeek = daysOfWeek[date.getDay()]
-  const monthOfYear = monthsOfYear[date.getMonth()]
-  const dayOfMonth = date.getDate()
-  const year = date.getFullYear()
+  const dayOfWeek = daysOfWeek[date.getDay()];
+  const monthOfYear = monthsOfYear[date.getMonth()];
+  const dayOfMonth = date.getDate();
+  const year = date.getFullYear();
 
-  return `${dayOfWeek} ${monthOfYear} ${dayOfMonth}, ${year}`
+  return `${dayOfWeek} ${monthOfYear} ${dayOfMonth}, ${year}`;
 }
 
 const structureLotteries = (lotteries) =>
@@ -76,53 +91,39 @@ const structureLotteries = (lotteries) =>
     title: lottery.title,
     description: lottery.description,
     owner: lottery.owner.toLowerCase(),
-    prize: fromWei(lottery.prize),
     ticketPrice: fromWei(lottery.ticketPrice),
-    image: lottery.image,
-    createdAt: formatDate(Number(lottery.createdAt + '000')),
-    drawsAt: formatDate(Number(lottery.expiresAt)),
-    expiresAt: Number(lottery.expiresAt),
-    participants: Number(lottery.participants),
+    servicePercent: Number(lottery.servicePercent),
+    createdAt: formatDate(Number(lottery.createdAt + "000")),
+    drawsAt: formatDate(Number(lottery.expiresAt + "000")),
+    expiresAt: Number(lottery.expiresAt + "000"),
+    participants: Number(lottery.numOfParticipants),
     drawn: lottery.drawn,
-  }))
+  }));
 
 const structuredParticipants = (participants) =>
-  participants.map((participant) => ({
-    account: participant[0].toLowerCase(),
-    lotteryNumber: participant[1],
-    paid: participant[2],
-  }))
+  participants.map((p) => ({
+    account: p.account.toLowerCase(),
+    lotteryNumber: p.lotteryNumber,
+  }));
 
-const structuredNumbers = (participants) => {
-  const purchasedNumbers = []
-
-  for (let i = 0; i < participants.length; i++) {
-    const purchasedNumber = participants[i][1]
-    purchasedNumbers.push(purchasedNumber)
-  }
-
-  return purchasedNumbers
-}
+const structuredNumbers = (participants) =>
+  participants.map((p) => p.lotteryNumber);
 
 const structuredResult = (result) => {
-  const LotteryResult = {
-    id: Number(result[0]),
-    completed: result[1],
-    paidout: result[2],
-    timestamp: Number(result[3] + '000'),
-    sharePerWinner: fromWei(result[4]),
-    winners: [],
-  }
-
-  for (let i = 0; i < result[5].length; i++) {
-    const winner = result[5][i][1]
-    LotteryResult.winners.push(winner)
-  }
-
-  return LotteryResult
-}
+  return {
+    completed: result.completed,
+    timestamp: Number(result.timestamp + "000"),
+    prizePerWinner: fromWei(result.prizePerWinner),
+    seed: Number(result.seed),
+    winners: result.winners.map((winner) => ({
+      account: winner.account,
+      lotteryNumber: winner.lotteryNumber,
+    })),
+  };
+};
 
 module.exports = {
+  getEthereumContracts,
   getLotteries,
   getLottery,
   structureLotteries,
@@ -130,4 +131,5 @@ module.exports = {
   getParticipants,
   getPurchasedNumbers,
   getLotteryResult,
-}
+  getTotalLotteries,
+};

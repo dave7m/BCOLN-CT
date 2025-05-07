@@ -1,20 +1,22 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect } from "react";
 
 const Countdown = ({ timestamp }) => {
-  const [timeLeft, setTimeLeft] = useState(timestamp - Date.now())
+  const [timeLeft, setTimeLeft] = useState(timestamp - Date.now());
 
   useEffect(() => {
     const interval = setInterval(() => {
-      setTimeLeft(timestamp - Date.now())
-    }, 1000)
+      setTimeLeft(timestamp - Date.now());
+    }, 1000);
 
-    return () => clearInterval(interval)
-  }, [timestamp])
+    return () => clearInterval(interval);
+  }, [timestamp]);
 
-  const days = Math.floor(timeLeft / (1000 * 60 * 60 * 24))
-  const hours = Math.floor((timeLeft % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60))
-  const minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60))
-  const seconds = Math.floor((timeLeft % (1000 * 60)) / 1000)
+  const days = Math.floor(timeLeft / (1000 * 60 * 60 * 24));
+  const hours = Math.floor(
+    (timeLeft % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60),
+  );
+  const minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
+  const seconds = Math.floor((timeLeft % (1000 * 60)) / 1000);
 
   return timestamp && Date.now() < timestamp ? (
     <div className="flex items-center justify-center space-x-3 flex-wrap">
@@ -54,7 +56,7 @@ const Countdown = ({ timestamp }) => {
         <p className="text-xs font-semibold">SECONDS</p>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default Countdown
+export default Countdown;
