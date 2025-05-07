@@ -1,6 +1,6 @@
 # 🎰 UZH Uniswap V3 Lottery dApp
 
-A decentralized lottery application built with Solidity smart contracts, a Next.js frontend (App Router), and Ethereum-based deployment (Hardhat). This project demonstrates transparency, randomness, and trust through verifiable lottery draws and automated prize distribution.
+A decentralized lottery application using Solidity smart contracts, Chainlink VRF for randomness, and a modern Next.js frontend. This project ensures transparent, verifiable draws and automated prize distribution without intermediaries.
 
 ---
 
@@ -9,12 +9,12 @@ A decentralized lottery application built with Solidity smart contracts, a Next.
 ```
 .
 ├── contracts/       # Solidity smart contracts
-├── components/        # Next.js frontend app
-├── deploy/          # Hardhat scripts for deployment & interaction
-├── test/            # Smart contract test files
-├── offchain/        # Off-chain oracle / IPFS integrations
-├── deployments/     # Deployment output (contract addresses & ABIs)
-├── hardhat.config.js
+├── components/      # Next.js frontend app
+├── deploy/          # Hardhat deploy scripts (mock + production)
+├── test/              # Hardhat tests
+├── deployments/       # Network deployment outputs (addresses & ABIs)
+├── hardhat.config.js  # Hardhat config (network, plugins, etc.)
+├── package.json       # Monorepo root config
 ├── package.json     # Root monorepo config
 └── yarn.lock
 ```
@@ -25,20 +25,20 @@ A decentralized lottery application built with Solidity smart contracts, a Next.
 
 ### 📦 Prerequisites
 
-- Node.js (v18+ recommended)
-- [Yarn](https://classic.yarnpkg.com/en/docs/install) (`npm install -g yarn`)
+- Node.js v18.12.1 (strictly required)
+- Yarn (v3.2.3 or higher)
 
 ---
 
 ### 🚀 Install Dependencies
 
-1. Run this from the root of the project:
+Run this from the root of the project:
 
 ```bash
 yarn install
 ```
 
-This will install dependencies for:
+Installs packages for both:
 
 - Root (Hardhat + Solidity)
 - `frontend/` workspace (React, Next.js, etc.)
@@ -90,7 +90,7 @@ Now you can connect your MetaMask wallet to the local Hardhat node and create ja
 
 ---
 
-## 🎮 Usage
+## 🎮 Development Usage
 
 ### 🔧 Compile Contracts
 
@@ -98,13 +98,32 @@ Now you can connect your MetaMask wallet to the local Hardhat node and create ja
 yarn compile
 ```
 
-### 🧹 Clean Artifacts
+### 🧹 Clean Build Artifacts
 
 ```bash
 yarn clean
 ```
 
-### 🚀 Deploy Locally (testnet / localhost)
+### 📆 Deploy Mocks Locally
+
+For VRF testing, deploy the mock VRF coordinator:
+
+```bash
+yarn deploy:local:mocks
+```
+
+### 🎲 Deploy Lottery Contracts Locally
+
+```bash
+yarn deploy:local:lottery
+```
+
+This deploys:
+
+- `LotteryManager`: Ownable contract for creating lotteries
+- `LotteryGame`: VRF-integrated contract for drawing winners
+
+Also links both contracts automatically (`setGame()`).
 
 For deploying contracts to a blockchain, we need to use the private_key of an account.
 Please create a `env.local` file, where you can store your private keys. Do not expose
@@ -112,28 +131,20 @@ them outside of this. Also, you must give the RPC_URL a blockchain.
 Your `env.local` file should then look like this:
 
 ```dotenv
-TEST_NET_PRIVATE_KEY='0x...'
-TEST_NET=http://127.0.0.1:7545
-```
-
-```bash
-yarn deploy:local
-```
-
-_(Customize your Hardhat networks in `hardhat.config.js`)_
-
-Once you have deployed a contract, you can interact with it:
-
-```js
-const contract = await ethers.getContractAt("HelloWorldContract", "0x...");
-await contract.getMessage();
+LOCALHOST_VRF_COORDINATOR=0x...  # address of VRFCoordinatorV2Mock
+VRF_KEYHASH=0x...
+VRF_SUBSCRIPTION_ID=1
 ```
 
 ---
 
 ### 🧪 Run Tests
 
-Coming soon: `yarn test`
+_Tests are currently being implemented._
+
+```bash
+yarn test
+```
 
 ---
 
@@ -143,30 +154,32 @@ Coming soon: `yarn test`
 yarn lint
 ```
 
-This runs:
+Runs:
 
-- `next lint` in the `frontend/` workspace
-- `solhint` on Solidity contracts
+- `next lint` in `frontend/`
+- `solhint` in `contracts/`
 
-### 💅 Format All Files
+---
+
+### 💅 Format Codebase
 
 ```bash
 yarn format
 ```
 
-Runs Prettier across the whole monorepo.
+Runs Prettier across the entire project.
 
 ---
 
 ### 🖥️ Run the Frontend
 
-From the root:
+From root:
 
 ```bash
 yarn workspace frontend dev
 ```
 
-Then open your browser at:
+Visit:
 [http://localhost:3000](http://localhost:3000)
 
 ---
@@ -182,10 +195,12 @@ Then open your browser at:
 
 ## 🧑‍💻 Tech Stack
 
-- [Hardhat](https://hardhat.org/)
-- [Next.js (App Router)](https://nextjs.org/)
 - [Solidity](https://soliditylang.org/)
+- [Hardhat](https://hardhat.org/)
+- [Chainlink VRF v2](https://docs.chain.link/vrf/)
+- [OpenZeppelin Contracts](https://docs.openzeppelin.com/contracts/)
+- [Next.js (App Router)](https://nextjs.org/)
 - [Yarn Workspaces](https://classic.yarnpkg.com/en/docs/workspaces/)
-- [Chainlink VRF (planned)](https://docs.chain.link/vrf/)
+- [TypeScript](https://www.typescriptlang.org/)
 
 ---
