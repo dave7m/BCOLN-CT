@@ -18,6 +18,7 @@
     "format": "prettier --ignore-path .prettierignore --write .",
     "compile": "hardhat compile",
     "clean": "hardhat clean",
+    "extract:local-keys": "ts-node scripts/export-accounts.ts",
     "deploy:local:mocks": "hardhat deploy --tags mocks --network localhost",
     "deploy:local:lottery": "hardhat deploy --tags lottery --network localhost",
     "console:local": "hardhat console --network localhost",
