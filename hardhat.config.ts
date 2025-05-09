@@ -6,7 +6,7 @@ import * as dotenv from "dotenv";
 dotenv.config();
 dotenv.config({ path: ".env.local" });
 
-const localhost_url = process.env.LOCALHOST || "";
+const localhost_url = process.env.RPC_URL || "http://127.0.0.1:8545";
 const localhost_user_1_private_key =
   process.env.LOCALHOST_USER_1_PRIVATE_KEY || "";
 const localhost_user_2_private_key =
