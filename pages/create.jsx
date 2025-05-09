@@ -5,6 +5,8 @@ import { useRouter } from "next/router";
 import { useSelector } from "react-redux";
 import SubHeader from "../components/SubHeader";
 import { createJackpot } from "../services/blockchain";
+import ImageUploader from "../components/ImageUploader";
+
 
 export default function Create() {
   const { wallet } = useSelector((state) => state.globalState);
@@ -90,14 +92,7 @@ export default function Create() {
               onChange={(e) => setTitle(e.target.value)}
               required
             />
-            <input
-              className="input-style"
-              type="url"
-              placeholder="Image URL"
-              value={imageURL}
-              onChange={(e) => setImageURL(e.target.value)}
-              required
-            />
+            
             <input
               className="input-style"
               type="number"
@@ -122,6 +117,17 @@ export default function Create() {
               onChange={(e) => setDescription(e.target.value)}
               required
             ></textarea>
+
+            <div className="space-y-2">
+              <ImageUploader onUploaded={(url) => setImageURL(url)} />
+                {imageURL && (
+                <img
+                src={imageURL}
+                alt="Preview"
+                className="w-full rounded shadow border border-gray-300"
+                />
+                )}
+            </div>
 
             <button
               type="submit"
