@@ -7,6 +7,20 @@ export default function ImageUploader({ onUploaded }) {
     const file = e.target.files?.[0];
     if (!file) return;
 
+    // allowed file types
+    const allowedTypes = ["image/jpeg", "image/png"];
+        if (!allowedTypes.includes(file.type)) {
+            alert("Only JPEG and PNG are allowed.");
+            return;
+        }
+
+    // file size max 1 MB
+    const maxSize = 1 * 1024 * 1024; // 1 MB in Bytes
+    if (file.size > maxSize) {
+        alert("File size exceeds 1 MB.");
+        return;
+    }
+
     setLoading(true);
 
     const reader = new FileReader();
