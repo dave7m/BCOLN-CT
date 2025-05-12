@@ -1,18 +1,20 @@
 import { HardhatUserConfig } from "hardhat/config";
 import "@nomicfoundation/hardhat-toolbox";
 import "hardhat-deploy";
-import * as dotenv from "dotenv";
+import { loadEnv } from "./loadEnv";
+import { ZeroHash } from "ethers";
 
-dotenv.config();
-dotenv.config({ path: ".env.local" });
+loadEnv();
 
 const localhost_url = process.env.LOCALHOST || "";
 const localhost_user_1_private_key =
-  process.env.LOCALHOST_USER_1_PRIVATE_KEY || "";
+  process.env.LOCALHOST_USER_1_PRIVATE_KEY || ZeroHash;
 const localhost_user_2_private_key =
-  process.env.LOCALHOST_USER_2_PRIVATE_KEY || "";
+  process.env.LOCALHOST_USER_2_PRIVATE_KEY || ZeroHash;
 const localhost_user_3_private_key =
-  process.env.LOCALHOST_USER_3_PRIVATE_KEY || "";
+  process.env.LOCALHOST_USER_3_PRIVATE_KEY || ZeroHash;
+const sepolia_url = process.env.SEPOLIA_RPC_URL || "";
+const sepolia_private_key = process.env.SEPOLIA_PRIVATE_KEY || "";
 
 const config: HardhatUserConfig = {
   solidity: {
@@ -38,7 +40,11 @@ const config: HardhatUserConfig = {
         localhost_user_3_private_key,
       ],
     },
-    // TODO - Add Live Testnet for VRF
+    sepolia: {
+      url: sepolia_url,
+      chainId: 11155111,
+      accounts: [sepolia_private_key],
+    },
   },
   namedAccounts: {
     deployer: {

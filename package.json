@@ -2,9 +2,6 @@
   "name": "uzh-dlottery",
   "version": "1.0.0",
   "private": true,
-  "workspaces": [
-    "frontend"
-  ],
   "engines": {
     "node": "=18.12.1",
     "yarn": ">=3.2.3",
@@ -13,16 +10,21 @@
   "main": "index.js",
   "scripts": {
     "dev": "next",
-    "lint": "yarn workspace frontend lint && yarn run lint:sol",
+    "lint": "next lint && yarn run lint:sol",
     "lint:sol": "solhint 'contracts/**/*.sol'",
-    "format": "prettier --ignore-path .prettierignore --write .",
+    "format": "prettier --ignore-path .prettierignore --write --plugin=prettier-plugin-solidity '**/*.{js,jsx,ts,tsx,sol,json,md}'",
     "compile": "hardhat compile",
     "clean": "hardhat clean",
     "extract:local-keys": "ts-node scripts/export-accounts.ts",
-    "deploy:local:mocks": "hardhat deploy --tags mocks --network localhost",
-    "deploy:local:lottery": "hardhat deploy --tags lottery --network localhost",
+    "deploy:local:mocks": "cross-env TARGET_NETWORK=localhost hardhat deploy --tags mocks --network localhost",
+    "deploy:local:lottery": "cross-env TARGET_NETWORK=localhost hardhat deploy --tags lottery --network localhost",
+    "deploy:local": "cross-env TARGET_NETWORK=localhost yarn deploy:local:mocks && yarn deploy:local:lottery",
+    "deploy:sepolia": "cross-env TARGET_NETWORK=sepolia hardhat deploy --tags lottery --network sepolia",
     "console:local": "hardhat console --network localhost",
-    "test": "hardhat typechain && hardhat test"
+    "console:sepolia": "hardhat console --network sepolia",
+    "test": "hardhat compile && hardhat typechain && hardhat test",
+    "run:local": "cross-env TARGET_NETWORK=localhost concurrently -k -n node,rest -c blue,green \"yarn hardhat node\" \"yarn wait-on http://127.0.0.1:8545 && yarn extract:local-keys && yarn deploy:local && yarn dev\"",
+    "run:sepolia": "cross-env TARGET_NETWORK=sepolia yarn deploy:sepolia && yarn dev"
   },
   "keywords": [],
   "author": "",
@@ -44,8 +46,7 @@
     "react-icons": "4.8.0",
     "react-identicons": "1.2.5",
     "react-redux": "8.0.5",
-    "react-toastify": "9.1.2",
-    "ts-node": "^10.9.2"
+    "react-toastify": "9.1.2"
   },
   "devDependencies": {
     "@nomicfoundation/hardhat-chai-matchers": "^2.0.0",
@@ -64,6 +65,8 @@
     "@typescript-eslint/parser": "5.48.1",
     "autoprefixer": "10.4.13",
     "chai": "^4.2.0",
+    "concurrently": "^9.1.2",
+    "cross-env": "^7.0.3",
     "eslint": "8.32.0",
     "eslint-config-alloy": "4.9.0",
     "eslint-config-next": "13.1.2",
@@ -80,8 +83,10 @@
     "solhint": "^5.0.5",
     "solidity-coverage": "^0.8.1",
     "tailwindcss": "3.2.4",
+    "ts-node": "^10.9.2",
     "typechain": "^8.3.0",
-    "typescript": "^5.8.3"
+    "typescript": "^5.8.3",
+    "wait-on": "^8.0.3"
   },
   "packageManager": "yarn@3.2.3"
 }

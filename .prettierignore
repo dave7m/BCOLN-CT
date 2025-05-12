@@ -1,7 +1,5 @@
 node_modules
 artifacts
 cache
-coverage
 deployments
-.env
 .next

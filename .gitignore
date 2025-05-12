@@ -4,8 +4,11 @@
 frontend/.vscode/
 
 # Environment variables
-.env
 .env.*
+.env.*.local
+.env.local
+.env.localhost.local
+.env.sepolia.local
 
 # Node.js
 node_modules/

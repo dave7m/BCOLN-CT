@@ -1,7 +1,7 @@
 import { HDNodeWallet, Mnemonic } from "ethers";
 import fs from "fs";
 
-const ENV_FILE = ".env.local";
+const ENV_FILE = ".env.localhost.local";
 
 async function main() {
   const mnemonicPhrase =
@@ -26,7 +26,7 @@ async function main() {
   const updated: Record<string, string> = {};
 
   privateKeys.forEach((key, i) => {
-    updated[`LOCALHOST_USER_${i + 1}_PRIVATE_KEY`] = `"${key}"`;
+    updated[`LOCALHOST_USER_${i + 1}_PRIVATE_KEY`] = `${key}`;
   });
 
   const newLines = lines.filter(Boolean).map((line) => {
@@ -42,9 +42,10 @@ async function main() {
   for (const [key, val] of Object.entries(updated)) {
     newLines.push(`${key}=${val}`);
   }
+  console.log(newLines.join("\n"));
 
   fs.writeFileSync(ENV_FILE, newLines.join("\n") + "\n");
-  console.log("✅ Patched .env.local with LOCALHOST private keys");
+  console.log(`✅ Patched ${ENV_FILE} with LOCALHOST private keys`);
 }
 
 main().catch((err) => {

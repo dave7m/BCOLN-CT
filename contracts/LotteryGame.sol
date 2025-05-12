@@ -1,30 +1,28 @@
 // SPDX-License-Identifier: UNLICENSED
-pragma solidity ^0.8.17;
+pragma solidity ^0.8.20;
 
-import { VRFCoordinatorV2Interface } from "@chainlink/contracts/src/v0.8/vrf/interfaces/VRFCoordinatorV2Interface.sol";
-import { Ownable } from "@openzeppelin/contracts/access/Ownable.sol";
-import { ReentrancyGuard } from "@openzeppelin/contracts/utils/ReentrancyGuard.sol";
-import { VRFConsumerBaseV2 } from "@chainlink/contracts/src/v0.8/vrf/VRFConsumerBaseV2.sol";
-import { ILotteryManager } from "./LotteryManager.sol";
+import {VRFCoordinatorV2Interface} from "@chainlink/contracts/src/v0.8/vrf/interfaces/VRFCoordinatorV2Interface.sol";
+import {Ownable} from "@openzeppelin/contracts/access/Ownable.sol";
+import {ReentrancyGuard} from "@openzeppelin/contracts/utils/ReentrancyGuard.sol";
+import {VRFConsumerBaseV2} from "@chainlink/contracts/src/v0.8/vrf/VRFConsumerBaseV2.sol";
+import {ILotteryManager} from "./LotteryManager.sol";
 
 error OnlyManager(string reason);
 error NoFunds();
 
 contract LotteryGame is VRFConsumerBaseV2, Ownable, ReentrancyGuard {
-
     ILotteryManager public manager;
 
     modifier onlyManager() {
-        if(address(manager) != msg.sender) {
+        if (address(manager) != msg.sender) {
             revert OnlyManager("Only callable by lottery manager!");
         }
         _;
     }
 
-
     // VRF fields
     VRFCoordinatorV2Interface private immutable COORDINATOR;
-    uint64 private immutable SUBSCRIPTION_ID;
+    uint256 private immutable SUBSCRIPTION_ID;
     bytes32 private immutable KEY_HASH;
     uint32 private immutable CALLBACK_GAS_LIMIT = 100000;
     uint16 private immutable REQUEST_CONFIRMATIONS = 3;
@@ -37,7 +35,12 @@ contract LotteryGame is VRFConsumerBaseV2, Ownable, ReentrancyGuard {
     mapping(uint256 => uint256) public requestIdToLotteryPrizePool;
 
     mapping(address => uint256) public pendingWithdrawals;
-    event WinnersDrawn(uint256 indexed lotteryId,  ILotteryManager.ParticipationStruct[] winners, uint256 prizePerWinner, uint256 seed);
+    event WinnersDrawn(
+        uint256 indexed lotteryId,
+        ILotteryManager.ParticipationStruct[] winners,
+        uint256 prizePerWinner,
+        uint256 seed
+    );
     event Deposit(address indexed to, uint256 amount);
 
     struct LotteryResult {
@@ -53,7 +56,7 @@ contract LotteryGame is VRFConsumerBaseV2, Ownable, ReentrancyGuard {
     constructor(
         address vrfCoordinator,
         bytes32 _keyHash,
-        uint64 subscriptionId,
+        uint256 subscriptionId,
         address managerAddress
     ) VRFConsumerBaseV2(vrfCoordinator) Ownable(msg.sender) {
         COORDINATOR = VRFCoordinatorV2Interface(vrfCoordinator);
@@ -62,16 +65,18 @@ contract LotteryGame is VRFConsumerBaseV2, Ownable, ReentrancyGuard {
         manager = ILotteryManager(managerAddress);
     }
 
-
     // only callable by the LotteryManager contract
-    function drawWinners(uint256 lotteryId, uint256 numberOfWinners) external payable onlyManager {
+    function drawWinners(
+        uint256 lotteryId,
+        uint256 numberOfWinners
+    ) external payable onlyManager {
         uint256 expected = manager.getJackpot(lotteryId);
         if (msg.value != expected) revert NoFunds();
 
         // request random number
         uint256 requestId = COORDINATOR.requestRandomWords(
             KEY_HASH,
-            SUBSCRIPTION_ID,
+            uint64(SUBSCRIPTION_ID),
             REQUEST_CONFIRMATIONS,
             CALLBACK_GAS_LIMIT,
             NUM_WORDS
@@ -81,19 +86,28 @@ contract LotteryGame is VRFConsumerBaseV2, Ownable, ReentrancyGuard {
         requestIdToLotteryId[requestId] = lotteryId;
         requestIdToNumberOfWinners[requestId] = numberOfWinners;
         requestIdToLotteryPrizePool[requestId] = msg.value;
-
     }
 
     // callback called by vrf
-    function fulfillRandomWords(uint256 requestId, uint256[] memory randomWords) internal override {
+    function fulfillRandomWords(
+        uint256 requestId,
+        uint256[] memory randomWords
+    ) internal override {
         uint256 lotteryId = requestIdToLotteryId[requestId];
         uint256 numberOfWinners = requestIdToNumberOfWinners[requestId];
 
-        ILotteryManager.LotteryStruct memory lottery = manager.getLottery(lotteryId);
-        ILotteryManager.ParticipationStruct[] memory participants = manager.getLotteryParticipants(lotteryId);
+        ILotteryManager.LotteryStruct memory lottery = manager.getLottery(
+            lotteryId
+        );
+        ILotteryManager.ParticipationStruct[] memory participants = manager
+            .getLotteryParticipants(lotteryId);
 
         // select winners
-        ILotteryManager.ParticipationStruct[] memory winners = _selectWinners(participants, numberOfWinners, randomWords[0]);
+        ILotteryManager.ParticipationStruct[] memory winners = _selectWinners(
+            participants,
+            numberOfWinners,
+            randomWords[0]
+        );
 
         // calculate prizes
         uint256 totalPrize = requestIdToLotteryPrizePool[requestId];
@@ -111,7 +125,6 @@ contract LotteryGame is VRFConsumerBaseV2, Ownable, ReentrancyGuard {
 
         emit WinnersDrawn(lotteryId, winners, prizePerWinner, randomWords[0]);
 
-
         LotteryResult storage result = lotteryResults[lotteryId];
         result.completed = true;
         result.timestamp = block.timestamp;
@@ -128,13 +141,15 @@ contract LotteryGame is VRFConsumerBaseV2, Ownable, ReentrancyGuard {
         delete requestIdToLotteryPrizePool[requestId];
     }
 
-
-    function _selectWinners(ILotteryManager.ParticipationStruct[] memory participants, uint256 _numberOfWinners, uint256 seed)
-    private
-    pure
-    returns (ILotteryManager.ParticipationStruct[] memory)
-    {
-        ILotteryManager.ParticipationStruct[] memory selected = new ILotteryManager.ParticipationStruct[](_numberOfWinners);
+    function _selectWinners(
+        ILotteryManager.ParticipationStruct[] memory participants,
+        uint256 _numberOfWinners,
+        uint256 seed
+    ) private pure returns (ILotteryManager.ParticipationStruct[] memory) {
+        ILotteryManager.ParticipationStruct[]
+            memory selected = new ILotteryManager.ParticipationStruct[](
+                _numberOfWinners
+            );
         uint256[] memory indices = _fisherYates(participants.length, seed);
 
         for (uint256 i = 0; i < _numberOfWinners; i++) {
@@ -145,7 +160,10 @@ contract LotteryGame is VRFConsumerBaseV2, Ownable, ReentrancyGuard {
     }
 
     // shuffle
-    function _fisherYates(uint256 n, uint256 seed) private pure returns (uint256[] memory) {
+    function _fisherYates(
+        uint256 n,
+        uint256 seed
+    ) private pure returns (uint256[] memory) {
         uint256[] memory indices = new uint256[](n);
         for (uint256 i = 0; i < n; i++) indices[i] = i;
 
@@ -161,18 +179,18 @@ contract LotteryGame is VRFConsumerBaseV2, Ownable, ReentrancyGuard {
 
     // recipients (winners & owner) call this to pull their ETH
     function withdrawPayments() external nonReentrant {
-      uint256 amount = pendingWithdrawals[msg.sender];
-      if (amount == 0) revert NoFunds();
-      pendingWithdrawals[msg.sender] = 0;
-      (bool ok,) = payable(msg.sender).call{ value: amount }("");
-      if(!ok) revert NoFunds();
+        uint256 amount = pendingWithdrawals[msg.sender];
+        if (amount == 0) revert NoFunds();
+        pendingWithdrawals[msg.sender] = 0;
+        (bool ok, ) = payable(msg.sender).call{value: amount}("");
+        if (!ok) revert NoFunds();
     }
 
-    function getLotteryResults(uint256 lotteryId) external view returns (LotteryResult memory) {
+    function getLotteryResults(
+        uint256 lotteryId
+    ) external view returns (LotteryResult memory) {
         return lotteryResults[lotteryId];
     }
-
-
 
     receive() external payable {}
 }
