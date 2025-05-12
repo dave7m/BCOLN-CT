@@ -5,11 +5,31 @@ const {
   LotteryManager: managerAddress,
 } = require("../artifacts/contractAddresses.json");
 const { formatEther, JsonRpcProvider, Contract, Wallet } = require("ethers");
+const { loadEnv } = require("../loadEnv");
+
 const fromWei = (num) => formatEther(num);
+loadEnv();
 
 const getEthereumContracts = async () => {
-  const provider = new JsonRpcProvider("http://localhost:8545");
-  const wallet = Wallet.createRandom().connect(provider);
+  const networkIsSepolia = process.env.TARGET_NETWORK === "sepolia";
+  const rpcURL = networkIsSepolia
+    ? process.env.NEXT_PUBLIC_SEPOLIA_RPC_URL
+    : process.env.LOCALHOST;
+  const privateKey = networkIsSepolia
+    ? process.env.SEPOLIA_PRIVATE_KEY
+    : process.env.LOCALHOST_USER_1_PRIVATE_KEY;
+
+  if (!rpcURL || !privateKey) {
+    throw new Error(
+      `Missing RPC URL or Private Key for network: ${process.env.TARGET_NETWORK}`,
+    );
+  }
+
+  console.log(`RPC URL: ${rpcURL}`);
+  console.log(`Private Key for network: ${privateKey}`);
+
+  const provider = new JsonRpcProvider(rpcURL);
+  const wallet = new Wallet(privateKey, provider);
 
   const manager = new Contract(managerAddress, managerAbi.abi, wallet);
   const game = new Contract(gameAddress, gameAbi.abi, wallet);
@@ -19,6 +39,7 @@ const getEthereumContracts = async () => {
 
 const getLotteries = async () => {
   const { manager } = await getEthereumContracts();
+  console.log(manager);
   const lotteries = await manager.getLotteries();
   return structureLotteries(lotteries);
 };
@@ -123,7 +144,7 @@ const structuredResult = (result) => {
 };
 
 module.exports = {
-  getEthereumContracts,
+  // getEthereumContracts,
   getLotteries,
   getLottery,
   structureLotteries,

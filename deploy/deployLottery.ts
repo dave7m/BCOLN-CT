@@ -11,22 +11,25 @@ const deployLotteryContracts: DeployFunction = async function (
   const { deployer } = await getNamedAccounts();
   const isLocal = network.name === "localhost" || network.name === "hardhat";
 
-  log("Deploying LotteryManager...");
-  const managerDeployment = await deploy("LotteryManager", {
-    from: deployer,
-    log: true,
-  });
+  if (!isLocal && !process.env.VRF_COORDINATOR) {
+    console.error("Env variable VRF_COORDINATOR not set!");
+    return;
+  }
+  if (!isLocal && !process.env.VRF_SUBSCRIPTION_ID) {
+    console.error("Env variable VRF_SUBSCRIPTION_ID not set!");
+    return;
+  }
+  if (!isLocal && !process.env.VRF_KEYHASH) {
+    console.error("Env variable VRF_KEYHASH not set!");
+    return;
+  }
 
-  log("Deploying LotteryGame...");
-  const vrfCoordinator =
-    (isLocal
-      ? process.env.LOCALHOST_VRF_COORDINATOR
-      : process.env.VRF_COORDINATOR) || ethers.ZeroAddress;
-  const keyHash = (isLocal && process.env.VRF_KEYHASH) || ethers.ZeroHash;
-  const subscriptionId =
-    isLocal && process.env.VRF_SUBSCRIPTION_ID
-      ? Number(process.env.VRF_SUBSCRIPTION_ID)
-      : 1;
+  const vrfCoordinator = isLocal
+    ? process.env.LOCALHOST_VRF_COORDINATOR
+    : process.env.VRF_COORDINATOR;
+  const keyHash = isLocal ? ethers.ZeroHash : process.env.VRF_KEYHASH;
+  const subscriptionId = isLocal ? 1 : BigInt(process.env.VRF_SUBSCRIPTION_ID!);
+
   console.log(
     "Using vrfCoordinator at",
     vrfCoordinator,
@@ -35,6 +38,14 @@ const deployLotteryContracts: DeployFunction = async function (
     "subscriptionId",
     subscriptionId,
   );
+
+  log("Deploying LotteryManager...");
+  const managerDeployment = await deploy("LotteryManager", {
+    from: deployer,
+    log: true,
+  });
+
+  log("Deploying LotteryGame...");
 
   const gameDeployment = await deploy("LotteryGame", {
     from: deployer,

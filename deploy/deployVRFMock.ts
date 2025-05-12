@@ -2,7 +2,7 @@ import { HardhatRuntimeEnvironment } from "hardhat/types";
 import { DeployFunction } from "hardhat-deploy/types";
 import fs from "fs";
 
-const ENV_FILE = ".env.local";
+const ENV_FILE = ".env.localhost.local";
 const KEY = "NEXT_PUBLIC_LOCALHOST_VRF_COORDINATOR";
 
 const deployMocks: DeployFunction = async function (
@@ -45,7 +45,7 @@ const deployMocks: DeployFunction = async function (
     }
 
     fs.writeFileSync(ENV_FILE, newLines.join("\n") + "\n");
-    console.log(`✅ Updated ${KEY} in .env.local: ${deployedAddress}`);
+    console.log(`✅ Updated ${KEY} in ${ENV_FILE}: ${deployedAddress}`);
   }
 };
 
