@@ -1,5 +1,5 @@
 import Head from "next/head";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import DrawTime from "@/components/DrawTime";
 import SubHeader from "@/components/SubHeader";
 import Generator from "@/components/Generator";
@@ -12,13 +12,12 @@ import {
 } from "@/services/blockchain.srr";
 
 export default function Draws({ lottery, lotteryNumbers, numbersPurchased }) {
-  const { luckyNumbers, purchasedNumbers, jackpot, wallet } = useSelector(
+  const { luckyNumbers, purchasedNumbers, jackpot } = useSelector(
     (state) => state.globalState,
   );
-  const { setLuckyNumbers, setPurchasedNumbers, setJackpot, setGroup } =
+  const { setLuckyNumbers, setPurchasedNumbers, setJackpot } =
     globalActions;
   const dispatch = useDispatch();
-  const { CometChat } = window;
 
   useEffect(() => {
     dispatch(setJackpot(lottery));
