@@ -15,10 +15,9 @@ export default function Draws({ lottery, lotteryNumbers, numbersPurchased }) {
   const { luckyNumbers, purchasedNumbers, jackpot, wallet } = useSelector(
     (state) => state.globalState,
   );
-  const { setLuckyNumbers, setPurchasedNumbers, setJackpot, setGroup } =
+  const { setLuckyNumbers, setPurchasedNumbers, setJackpot } =
     globalActions;
   const dispatch = useDispatch();
-  const { CometChat } = window;
 
   useEffect(() => {
     dispatch(setJackpot(lottery));

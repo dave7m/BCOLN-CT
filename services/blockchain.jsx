@@ -210,16 +210,11 @@ const notifyUser = (msg) => {
   console.log(msg);
 };
 
-const truncate = (text, startChars, endChars, maxLength) => {
-  if (text.length > maxLength) {
-    let start = text.substring(0, startChars);
-    let end = text.substring(text.length - endChars);
-    while (start.length + end.length < maxLength) {
-      start += ".";
-    }
-    return start + end;
-  }
-  return text;
+const truncate = (text, maxLength, startChars = 4, endChars = 4) => {
+  if (text.length <= maxLength) return text;
+  const start = text.slice(0, startChars);
+  const end = text.slice(-endChars);
+  return `${start}...${end}`;
 };
 
 export {

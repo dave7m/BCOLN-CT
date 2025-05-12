@@ -1,5 +1,5 @@
 import Head from "next/head";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { toast } from "react-toastify";
 import { useRouter } from "next/router";
 import { useSelector } from "react-redux";
@@ -16,13 +16,27 @@ export default function Create() {
   const [imageURL, setImageURL] = useState("");
   const [ticketPrice, setTicketPrice] = useState("");
   const [expiresAt, setExpiresAt] = useState("");
+  const [isFormComplete, setIsFormComplete] = useState(false);
+
+  useEffect(() => {
+    if (
+        title.trim() !== "" &&
+        description.trim() !== "" &&
+        imageURL !== "" &&
+        ticketPrice !== "" &&
+        expiresAt !== ""
+    ) {
+      setIsFormComplete(true);
+    } else {
+      setIsFormComplete(false);
+    }
+  }, [title, description, imageURL, ticketPrice, expiresAt]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!wallet) return toast.warning("Wallet not connected");
 
-    if (!title || !description || !imageURL || !ticketPrice || !expiresAt)
-      return;
+    if (!isFormComplete) return;
 
     const params = {
       title,
@@ -130,8 +144,12 @@ export default function Create() {
 
             <button
               type="submit"
-              className="w-full py-3 px-4 text-white bg-blue-600 hover:bg-blue-700
-              font-bold rounded-md transition-shadow shadow-md hover:shadow-lg"
+              disabled={!isFormComplete}
+              className={`w-full py-3 px-4 font-bold rounded-md transition-all shadow-md ${
+                  isFormComplete
+                      ? "text-white bg-blue-600 hover:bg-blue-700 hover:shadow-lg"
+                      : "text-gray-500 bg-gray-300 cursor-not-allowed"
+              }`}
             >
               🚀 Submit Jackpot
             </button>

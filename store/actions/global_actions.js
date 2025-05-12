@@ -8,12 +8,6 @@ export const global_actions = {
   setWinnerModal: (state, action) => {
     state.winnerModal = action.payload;
   },
-  setChatModal: (state, action) => {
-    state.chatModal = action.payload;
-  },
-  setAuthModal: (state, action) => {
-    state.authModal = action.payload;
-  },
   setCurrentUser: (state, action) => {
     state.currentUser = action.payload;
   },

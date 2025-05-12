@@ -37,21 +37,25 @@ const Jackpot = ({ jackpot }) => {
           className="rounded-xl w-20 h-20 object-cover"
         />
         <div className="flex flex-col text-sm text-slate-600">
-          {/*TODO: There is no Prize field*/}
           <span className="text-green-600 font-bold text-base">
-            Up to {jackpot.prize} ETH
+            {jackpot.title}
           </span>
-          <span className="text-xs">Draws On: {jackpot.drawsAt}</span>
+            <span className="text-xs">
+  Draws On: {new Date(jackpot.drawsAtTimestamp).toLocaleString("en-US", {
+                year: "numeric",
+                month: "short",
+                day: "numeric",
+                hour: "2-digit",
+                minute: "2-digit",
+            })}
+            </span>
         </div>
       </div>
 
       {/* Title & Description */}
       <div className="space-y-2">
-        <h2 className="text-lg font-semibold text-slate-800">
-          {jackpot.title}
-        </h2>
         <p className="text-sm text-slate-500 leading-5">
-          {truncate(jackpot.description, 90, 3, 0)}
+          Description: {truncate(jackpot.description, 90, 3, 0)}
         </p>
       </div>
 

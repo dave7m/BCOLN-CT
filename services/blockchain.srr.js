@@ -95,6 +95,7 @@ const structureLotteries = (lotteries) =>
     servicePercent: Number(lottery.servicePercent),
     createdAt: formatDate(Number(lottery.createdAt + "000")),
     drawsAt: formatDate(Number(lottery.expiresAt + "000")),
+    drawsAtTimestamp: Number(lottery.expiresAt + "000"),
     expiresAt: Number(lottery.expiresAt + "000"),
     participants: Number(lottery.numOfParticipants),
     drawn: lottery.drawn,

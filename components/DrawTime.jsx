@@ -8,7 +8,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { globalActions } from "@/store/global_reducer";
 
 const DrawTime = ({ jackpot, luckyNumbers, participants }) => {
-  const { setGeneratorModal, setAuthModal, setChatModal, setGroup } =
+  const { setGeneratorModal} =
     globalActions;
   const { wallet, currentUser, group } = useSelector(
     (state) => state.globalState,
@@ -16,7 +16,7 @@ const DrawTime = ({ jackpot, luckyNumbers, participants }) => {
   const dispatch = useDispatch();
   const router = useRouter();
   const { jackpotId } = router.query;
-  const { CometChat } = window;
+
 
   console.log(jackpotId);
   console.log(participants, luckyNumbers);
@@ -32,45 +32,6 @@ const DrawTime = ({ jackpot, luckyNumbers, participants }) => {
       {
         pending: "Approve transaction...",
         success: "Ticket purchased successfully 👌",
-        error: "Encountered error 🤯",
-      },
-    );
-  };
-
-  const handleGroupCreation = async () => {
-    if (!currentUser) return toast.warning("Please authenticate chat");
-    await toast.promise(
-      new Promise(async (resolve, reject) => {
-        await createNewGroup(CometChat, `guid_${jackpot?.id}`, jackpot?.title)
-          .then((group) => {
-            dispatch(setGroup(JSON.parse(JSON.stringify(group))));
-            resolve();
-          })
-          .catch(() => reject());
-      }),
-      {
-        pending: "Creating group...",
-        success: "Group created successfully 👌",
-        error: "Encountered error 🤯",
-      },
-    );
-  };
-
-  const handleGroupJoin = async () => {
-    if (!currentUser) return toast.warning("Please authenticate chat");
-    await toast.promise(
-      new Promise(async (resolve, reject) => {
-        await joinGroup(CometChat, `guid_${jackpot?.id}`)
-          .then((group) => {
-            dispatch(setGroup(JSON.parse(JSON.stringify(group))));
-            resolve();
-            window.location.reload();
-          })
-          .catch(() => reject());
-      }),
-      {
-        pending: "Joining group...",
-        success: "Group joined successfully 👌",
         error: "Encountered error 🤯",
       },
     );
@@ -114,21 +75,22 @@ const DrawTime = ({ jackpot, luckyNumbers, participants }) => {
             </button>
           )}
 
-          {group && !group.hasJoined && (
-            <button
-              onClick={handleGroupJoin}
-              className="bg-gray-500 text-white text-sm font-semibold py-2 px-4 rounded-full hover:bg-rose-600 transition"
-            >
-              Join Group
-            </button>
+          {wallet?.toLowerCase() === jackpot?.owner?.toLowerCase() ? (
+              <Link
+                  href={`/results/` + jackpot?.id}
+                  className="bg-[#0c2856] text-white text-sm font-semibold py-2 px-4 rounded-full hover:bg-[#1a396c] transition"
+              >
+                Draw Result
+              </Link>
+          ) : (
+              <Link
+                  href={`/results/` + jackpot?.id}
+                  className="bg-[#0c2856] text-white text-sm font-semibold py-2 px-4 rounded-full hover:bg-[#1a396c] transition"
+              >
+                Show Result
+              </Link>
           )}
 
-          <Link
-            href={`/results/` + jackpot?.id}
-            className="bg-[#0c2856] text-white text-sm font-semibold py-2 px-4 rounded-full hover:bg-[#1a396c] transition"
-          >
-            Draw Result
-          </Link>
         </div>
       </div>
 
