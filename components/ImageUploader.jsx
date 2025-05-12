@@ -9,16 +9,16 @@ export default function ImageUploader({ onUploaded }) {
 
     // allowed file types
     const allowedTypes = ["image/jpeg", "image/png"];
-        if (!allowedTypes.includes(file.type)) {
-            alert("Only JPEG and PNG are allowed.");
-            return;
-        }
+    if (!allowedTypes.includes(file.type)) {
+      alert("Only JPEG and PNG are allowed.");
+      return;
+    }
 
     // file size max 1 MB
-    const maxSize = 1 * 1024 * 1024; // 1 MB in Bytes
+    const maxSize = 1024 * 1024; // 1 MB in Bytes
     if (file.size > maxSize) {
-        alert("File size exceeds 1 MB.");
-        return;
+      alert("File size exceeds 1 MB.");
+      return;
     }
 
     setLoading(true);
@@ -51,13 +51,11 @@ export default function ImageUploader({ onUploaded }) {
 
   return (
     <div className="flex justify-center">
-      <label
-        className="cursor-pointer inline-block px-5 py-3 bg-orange-500 hover:bg-orange-600 text-white font-semibold rounded-md shadow-md transition"
-      >
+      <label className="cursor-pointer inline-block px-5 py-3 bg-orange-500 hover:bg-orange-600 text-white font-semibold rounded-md shadow-md transition">
         {loading ? "Uploading..." : "📁 Choose Image"}
         <input
           type="file"
-          accept="image/*"
+          accept="image/png, image/jpeg"
           onChange={handleFileChange}
           disabled={loading}
           className="hidden"
