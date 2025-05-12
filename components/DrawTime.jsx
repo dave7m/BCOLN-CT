@@ -8,7 +8,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { globalActions } from "@/store/global_reducer";
 
 const DrawTime = ({ jackpot, luckyNumbers, participants }) => {
-  const { setGeneratorModal, setAuthModal, setChatModal, setGroup } =
+  const { setGeneratorModal, setGroup } =
     globalActions;
   const { wallet, currentUser, group } = useSelector(
     (state) => state.globalState,
@@ -18,9 +18,6 @@ const DrawTime = ({ jackpot, luckyNumbers, participants }) => {
   const { jackpotId } = router.query;
   const { CometChat } = window;
 
-  console.log(jackpotId);
-  console.log(participants, luckyNumbers);
-  console.log(jackpot);
   const handlePurchase = async (luckyNumberId) => {
     if (!wallet) return toast.warning("Connect your wallet");
     await toast.promise(
@@ -32,25 +29,6 @@ const DrawTime = ({ jackpot, luckyNumbers, participants }) => {
       {
         pending: "Approve transaction...",
         success: "Ticket purchased successfully 👌",
-        error: "Encountered error 🤯",
-      },
-    );
-  };
-
-  const handleGroupCreation = async () => {
-    if (!currentUser) return toast.warning("Please authenticate chat");
-    await toast.promise(
-      new Promise(async (resolve, reject) => {
-        await createNewGroup(CometChat, `guid_${jackpot?.id}`, jackpot?.title)
-          .then((group) => {
-            dispatch(setGroup(JSON.parse(JSON.stringify(group))));
-            resolve();
-          })
-          .catch(() => reject());
-      }),
-      {
-        pending: "Creating group...",
-        success: "Group created successfully 👌",
         error: "Encountered error 🤯",
       },
     );
@@ -100,7 +78,7 @@ const DrawTime = ({ jackpot, luckyNumbers, participants }) => {
         {jackpot?.expiresAt && <Countdown timestamp={jackpot?.expiresAt} />}
 
         <div className="flex justify-center items-center flex-wrap gap-4">
-          {wallet?.toLowerCase() == jackpot?.owner && (
+          {wallet?.toLowerCase() === jackpot?.owner && (
             <button
               disabled={jackpot?.expiresAt < Date.now()}
               onClick={onGenerate}
