@@ -7,7 +7,6 @@ import SubHeader from "../components/SubHeader";
 import { createJackpot } from "../services/blockchain";
 import ImageUploader from "../components/ImageUploader";
 
-
 export default function Create() {
   const { wallet } = useSelector((state) => state.globalState);
   const router = useRouter();
@@ -92,7 +91,7 @@ export default function Create() {
               onChange={(e) => setTitle(e.target.value)}
               required
             />
-            
+
             <input
               className="input-style"
               type="number"
@@ -120,13 +119,13 @@ export default function Create() {
 
             <div className="space-y-2">
               <ImageUploader onUploaded={(url) => setImageURL(url)} />
-                {imageURL && (
+              {imageURL && (
                 <img
-                src={imageURL}
-                alt="Preview"
-                className="w-full rounded shadow border border-gray-300"
+                  src={imageURL}
+                  alt="Preview"
+                  className="w-full rounded shadow border border-gray-300"
                 />
-                )}
+              )}
             </div>
 
             <button

@@ -32,7 +32,7 @@ const Jackpot = ({ jackpot }) => {
         <Image
           width={100}
           height={100}
-          src={jackpot.image}
+          src={jackpot.imageURL}
           alt="Jackpot Icon"
           className="rounded-xl w-20 h-20 object-cover"
         />

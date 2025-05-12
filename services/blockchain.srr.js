@@ -31,8 +31,7 @@ const getLottery = async (id) => {
 
 const getTotalLotteries = async () => {
   const { manager } = await getEthereumContracts();
-  const raw = await manager.getTotalLotteries();
-  return raw;
+  return await manager.getTotalLotteries();
 };
 
 const getParticipants = async (id) => {
@@ -90,6 +89,7 @@ const structureLotteries = (lotteries) =>
     id: Number(lottery.id),
     title: lottery.title,
     description: lottery.description,
+    imageURL: lottery.imageURL,
     owner: lottery.owner.toLowerCase(),
     ticketPrice: fromWei(lottery.ticketPrice),
     servicePercent: Number(lottery.servicePercent),
