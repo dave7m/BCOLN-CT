@@ -43,6 +43,7 @@ const deployLotteryContracts: DeployFunction = async function (
   const managerDeployment = await deploy("LotteryManager", {
     from: deployer,
     log: true,
+    skipIfAlreadyDeployed: true,
   });
 
   log("Deploying LotteryGame...");
@@ -51,25 +52,35 @@ const deployLotteryContracts: DeployFunction = async function (
     from: deployer,
     args: [vrfCoordinator, keyHash, subscriptionId, managerDeployment.address],
     log: true,
+    skipIfAlreadyDeployed: true,
   });
 
   const manager = await ethers.getContractAt(
     "LotteryManager",
     managerDeployment.address,
   );
-  const tx = await manager.setGame(gameDeployment.address);
-  await tx.wait();
+  const currentGame = await manager.game();
+  if (currentGame !== gameDeployment.address) {
+    const tx = await manager.setGame(gameDeployment.address);
+    await tx.wait();
+    log(`Linked manager with game via setGame(${gameDeployment.address})`);
+  } else {
+    log("Manager already linked with correct game. Skipping setGame().");
+  }
+
   log(`Linked manager with game via setGame(${gameDeployment.address})`);
 
   const addresses = {
     LotteryManager: managerDeployment.address,
     LotteryGame: gameDeployment.address,
   };
+
+  const networkName = network.name === "hardhat" ? "localhost" : network.name;
   fs.writeFileSync(
-    "./artifacts/contractAddresses.json",
+    `./addresses/${networkName}.json`,
     JSON.stringify(addresses, null, 2),
   );
-  log("Saved contract addresses to ./artifacts/contractAddresses.json");
+  log(`Saved contract addresses to addresses/${networkName}.json`);
 };
 
 export default deployLotteryContracts;

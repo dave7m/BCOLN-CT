@@ -5,12 +5,19 @@ import {VRFCoordinatorV2Interface} from "@chainlink/contracts/src/v0.8/vrf/inter
 import {Ownable} from "@openzeppelin/contracts/access/Ownable.sol";
 import {ReentrancyGuard} from "@openzeppelin/contracts/utils/ReentrancyGuard.sol";
 import {VRFConsumerBaseV2} from "@chainlink/contracts/src/v0.8/vrf/VRFConsumerBaseV2.sol";
-import {ILotteryManager} from "./LotteryManager.sol";
+
+import {ILotteryManager} from "./interfaces/ILotteryManager.sol";
+import {ILotteryGame} from "./interfaces/ILotteryGame.sol";
 
 error OnlyManager(string reason);
 error NoFunds();
 
-contract LotteryGame is VRFConsumerBaseV2, Ownable, ReentrancyGuard {
+contract LotteryGame is
+    ILotteryGame,
+    VRFConsumerBaseV2,
+    Ownable,
+    ReentrancyGuard
+{
     ILotteryManager public manager;
 
     modifier onlyManager() {

@@ -2,7 +2,7 @@ import networking from "../assets/networking.png";
 import background from "../assets/background.jpg";
 import Image from "next/image";
 import { useSelector } from "react-redux";
-import { connectWallet, truncate } from "@/services/blockchain";
+import { connectWallet, truncate } from "../services/blockchain";
 import Link from "next/link";
 
 const Header = () => {

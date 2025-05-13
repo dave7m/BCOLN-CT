@@ -1,0 +1,703 @@
+{
+  "address": "0x916a7aA12fAd61ca3849f3F2cF7bf0e92000Fa62",
+  "abi": [
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "vrfCoordinator",
+          "type": "address"
+        },
+        {
+          "internalType": "bytes32",
+          "name": "_keyHash",
+          "type": "bytes32"
+        },
+        {
+          "internalType": "uint256",
+          "name": "subscriptionId",
+          "type": "uint256"
+        },
+        {
+          "internalType": "address",
+          "name": "managerAddress",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "nonpayable",
+      "type": "constructor"
+    },
+    {
+      "inputs": [],
+      "name": "NoFunds",
+      "type": "error"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "have",
+          "type": "address"
+        },
+        {
+          "internalType": "address",
+          "name": "want",
+          "type": "address"
+        }
+      ],
+      "name": "OnlyCoordinatorCanFulfill",
+      "type": "error"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "string",
+          "name": "reason",
+          "type": "string"
+        }
+      ],
+      "name": "OnlyManager",
+      "type": "error"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "owner",
+          "type": "address"
+        }
+      ],
+      "name": "OwnableInvalidOwner",
+      "type": "error"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "account",
+          "type": "address"
+        }
+      ],
+      "name": "OwnableUnauthorizedAccount",
+      "type": "error"
+    },
+    {
+      "inputs": [],
+      "name": "ReentrancyGuardReentrantCall",
+      "type": "error"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "to",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "amount",
+          "type": "uint256"
+        }
+      ],
+      "name": "Deposit",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "previousOwner",
+          "type": "address"
+        },
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "newOwner",
+          "type": "address"
+        }
+      ],
+      "name": "OwnershipTransferred",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "uint256",
+          "name": "lotteryId",
+          "type": "uint256"
+        },
+        {
+          "components": [
+            {
+              "internalType": "address",
+              "name": "account",
+              "type": "address"
+            },
+            {
+              "internalType": "string",
+              "name": "lotteryNumber",
+              "type": "string"
+            }
+          ],
+          "indexed": false,
+          "internalType": "struct ILotteryManager.ParticipationStruct[]",
+          "name": "winners",
+          "type": "tuple[]"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "prizePerWinner",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "seed",
+          "type": "uint256"
+        }
+      ],
+      "name": "WinnersDrawn",
+      "type": "event"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "lotteryId",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "numberOfWinners",
+          "type": "uint256"
+        }
+      ],
+      "name": "drawWinners",
+      "outputs": [],
+      "stateMutability": "payable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "lotteryId",
+          "type": "uint256"
+        }
+      ],
+      "name": "getLotteryResults",
+      "outputs": [
+        {
+          "components": [
+            {
+              "internalType": "bool",
+              "name": "completed",
+              "type": "bool"
+            },
+            {
+              "internalType": "uint256",
+              "name": "timestamp",
+              "type": "uint256"
+            },
+            {
+              "components": [
+                {
+                  "internalType": "address",
+                  "name": "account",
+                  "type": "address"
+                },
+                {
+                  "internalType": "string",
+                  "name": "lotteryNumber",
+                  "type": "string"
+                }
+              ],
+              "internalType": "struct ILotteryManager.ParticipationStruct[]",
+              "name": "winners",
+              "type": "tuple[]"
+            },
+            {
+              "internalType": "uint256",
+              "name": "prizePerWinner",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "seed",
+              "type": "uint256"
+            }
+          ],
+          "internalType": "struct LotteryGame.LotteryResult",
+          "name": "",
+          "type": "tuple"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "name": "lotteryResults",
+      "outputs": [
+        {
+          "internalType": "bool",
+          "name": "completed",
+          "type": "bool"
+        },
+        {
+          "internalType": "uint256",
+          "name": "timestamp",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "prizePerWinner",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "seed",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "manager",
+      "outputs": [
+        {
+          "internalType": "contract ILotteryManager",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "owner",
+      "outputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "name": "pendingWithdrawals",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "requestId",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256[]",
+          "name": "randomWords",
+          "type": "uint256[]"
+        }
+      ],
+      "name": "rawFulfillRandomWords",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "renounceOwnership",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "name": "requestIdToLotteryId",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "name": "requestIdToLotteryPrizePool",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "name": "requestIdToNumberOfWinners",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "newOwner",
+          "type": "address"
+        }
+      ],
+      "name": "transferOwnership",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "withdrawPayments",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "stateMutability": "payable",
+      "type": "receive"
+    }
+  ],
+  "transactionHash": "0x0433024049d82121807ab64c27c7276d2b212434bb0c63e67098e2b61f51dec1",
+  "receipt": {
+    "to": null,
+    "from": "0x7aF6043b8016a82bb24EfD32b13E34bD3BBC9A86",
+    "contractAddress": "0x916a7aA12fAd61ca3849f3F2cF7bf0e92000Fa62",
+    "transactionIndex": 115,
+    "gasUsed": "1468509",
+    "logsBloom": "0x00000000000000000000000000000000000000000000000000800000000080000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000001001000000000000000000000000000000080020000000000000000000800000000000000000000000000000000400000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000002000000000000000020000000008000000000000000000000000000000000000000000000000000040000",
+    "blockHash": "0x95c5a5b4ed98a46f33d9797da50f36af90b583bcefdf2bc1da059fbcb78f7e65",
+    "transactionHash": "0x0433024049d82121807ab64c27c7276d2b212434bb0c63e67098e2b61f51dec1",
+    "logs": [
+      {
+        "transactionIndex": 115,
+        "blockNumber": 8312112,
+        "transactionHash": "0x0433024049d82121807ab64c27c7276d2b212434bb0c63e67098e2b61f51dec1",
+        "address": "0x916a7aA12fAd61ca3849f3F2cF7bf0e92000Fa62",
+        "topics": [
+          "0x8be0079c531659141344cd1fd0a4f28419497f9722a3daafe3b4186f6b6457e0",
+          "0x0000000000000000000000000000000000000000000000000000000000000000",
+          "0x0000000000000000000000007af6043b8016a82bb24efd32b13e34bd3bbc9a86"
+        ],
+        "data": "0x",
+        "logIndex": 206,
+        "blockHash": "0x95c5a5b4ed98a46f33d9797da50f36af90b583bcefdf2bc1da059fbcb78f7e65"
+      }
+    ],
+    "blockNumber": 8312112,
+    "cumulativeGasUsed": "15912900",
+    "status": 1,
+    "byzantium": true
+  },
+  "args": [
+    "0x9ddfaca8183c41ad55329bdeed9f6a8d53168b1b",
+    "0x787d74caea10b2b357790d5b5247c2f63d1d91572a9846f780606e4d953677ae",
+    "73999970424201163859210690274792311953699141782777105362903940486778334379349",
+    "0x0e78Be9fc20C12F10a690d0dc22E85B83337F0D4"
+  ],
+  "numDeployments": 2,
+  "solcInputHash": "30d16a61e712d746a67459587ec3c887",
+  "metadata": "{\"compiler\":{\"version\":\"0.8.20+commit.a1b79de6\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"inputs\":[{\"internalType\":\"address\",\"name\":\"vrfCoordinator\",\"type\":\"address\"},{\"internalType\":\"bytes32\",\"name\":\"_keyHash\",\"type\":\"bytes32\"},{\"internalType\":\"uint256\",\"name\":\"subscriptionId\",\"type\":\"uint256\"},{\"internalType\":\"address\",\"name\":\"managerAddress\",\"type\":\"address\"}],\"stateMutability\":\"nonpayable\",\"type\":\"constructor\"},{\"inputs\":[],\"name\":\"NoFunds\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"have\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"want\",\"type\":\"address\"}],\"name\":\"OnlyCoordinatorCanFulfill\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"string\",\"name\":\"reason\",\"type\":\"string\"}],\"name\":\"OnlyManager\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"owner\",\"type\":\"address\"}],\"name\":\"OwnableInvalidOwner\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"}],\"name\":\"OwnableUnauthorizedAccount\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"ReentrancyGuardReentrantCall\",\"type\":\"error\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"to\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"amount\",\"type\":\"uint256\"}],\"name\":\"Deposit\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"previousOwner\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"newOwner\",\"type\":\"address\"}],\"name\":\"OwnershipTransferred\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"uint256\",\"name\":\"lotteryId\",\"type\":\"uint256\"},{\"components\":[{\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"},{\"internalType\":\"string\",\"name\":\"lotteryNumber\",\"type\":\"string\"}],\"indexed\":false,\"internalType\":\"struct ILotteryManager.ParticipationStruct[]\",\"name\":\"winners\",\"type\":\"tuple[]\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"prizePerWinner\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"seed\",\"type\":\"uint256\"}],\"name\":\"WinnersDrawn\",\"type\":\"event\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"lotteryId\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"numberOfWinners\",\"type\":\"uint256\"}],\"name\":\"drawWinners\",\"outputs\":[],\"stateMutability\":\"payable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"lotteryId\",\"type\":\"uint256\"}],\"name\":\"getLotteryResults\",\"outputs\":[{\"components\":[{\"internalType\":\"bool\",\"name\":\"completed\",\"type\":\"bool\"},{\"internalType\":\"uint256\",\"name\":\"timestamp\",\"type\":\"uint256\"},{\"components\":[{\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"},{\"internalType\":\"string\",\"name\":\"lotteryNumber\",\"type\":\"string\"}],\"internalType\":\"struct ILotteryManager.ParticipationStruct[]\",\"name\":\"winners\",\"type\":\"tuple[]\"},{\"internalType\":\"uint256\",\"name\":\"prizePerWinner\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"seed\",\"type\":\"uint256\"}],\"internalType\":\"struct LotteryGame.LotteryResult\",\"name\":\"\",\"type\":\"tuple\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"name\":\"lotteryResults\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"completed\",\"type\":\"bool\"},{\"internalType\":\"uint256\",\"name\":\"timestamp\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"prizePerWinner\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"seed\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"manager\",\"outputs\":[{\"internalType\":\"contract ILotteryManager\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"owner\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"name\":\"pendingWithdrawals\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"requestId\",\"type\":\"uint256\"},{\"internalType\":\"uint256[]\",\"name\":\"randomWords\",\"type\":\"uint256[]\"}],\"name\":\"rawFulfillRandomWords\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"renounceOwnership\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"name\":\"requestIdToLotteryId\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"name\":\"requestIdToLotteryPrizePool\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"name\":\"requestIdToNumberOfWinners\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"newOwner\",\"type\":\"address\"}],\"name\":\"transferOwnership\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"withdrawPayments\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"stateMutability\":\"payable\",\"type\":\"receive\"}],\"devdoc\":{\"errors\":{\"OwnableInvalidOwner(address)\":[{\"details\":\"The owner is not a valid owner account. (eg. `address(0)`)\"}],\"OwnableUnauthorizedAccount(address)\":[{\"details\":\"The caller account is not authorized to perform an operation.\"}],\"ReentrancyGuardReentrantCall()\":[{\"details\":\"Unauthorized reentrant call.\"}]},\"kind\":\"dev\",\"methods\":{\"owner()\":{\"details\":\"Returns the address of the current owner.\"},\"renounceOwnership()\":{\"details\":\"Leaves the contract without owner. It will not be possible to call `onlyOwner` functions. Can only be called by the current owner. NOTE: Renouncing ownership will leave the contract without an owner, thereby disabling any functionality that is only available to the owner.\"},\"transferOwnership(address)\":{\"details\":\"Transfers ownership of the contract to a new account (`newOwner`). Can only be called by the current owner.\"}},\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{},\"version\":1}},\"settings\":{\"compilationTarget\":{\"contracts/LotteryGame.sol\":\"LotteryGame\"},\"evmVersion\":\"paris\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\",\"useLiteralContent\":true},\"optimizer\":{\"enabled\":true,\"runs\":200},\"remappings\":[]},\"sources\":{\"@chainlink/contracts/src/v0.8/vrf/VRFConsumerBaseV2.sol\":{\"content\":\"// SPDX-License-Identifier: MIT\\npragma solidity ^0.8.4;\\n\\n/** ****************************************************************************\\n * @notice Interface for contracts using VRF randomness\\n * *****************************************************************************\\n * @dev PURPOSE\\n *\\n * @dev Reggie the Random Oracle (not his real job) wants to provide randomness\\n * @dev to Vera the verifier in such a way that Vera can be sure he's not\\n * @dev making his output up to suit himself. Reggie provides Vera a public key\\n * @dev to which he knows the secret key. Each time Vera provides a seed to\\n * @dev Reggie, he gives back a value which is computed completely\\n * @dev deterministically from the seed and the secret key.\\n *\\n * @dev Reggie provides a proof by which Vera can verify that the output was\\n * @dev correctly computed once Reggie tells it to her, but without that proof,\\n * @dev the output is indistinguishable to her from a uniform random sample\\n * @dev from the output space.\\n *\\n * @dev The purpose of this contract is to make it easy for unrelated contracts\\n * @dev to talk to Vera the verifier about the work Reggie is doing, to provide\\n * @dev simple access to a verifiable source of randomness. It ensures 2 things:\\n * @dev 1. The fulfillment came from the VRFCoordinator\\n * @dev 2. The consumer contract implements fulfillRandomWords.\\n * *****************************************************************************\\n * @dev USAGE\\n *\\n * @dev Calling contracts must inherit from VRFConsumerBase, and can\\n * @dev initialize VRFConsumerBase's attributes in their constructor as\\n * @dev shown:\\n *\\n * @dev   contract VRFConsumer {\\n * @dev     constructor(<other arguments>, address _vrfCoordinator, address _link)\\n * @dev       VRFConsumerBase(_vrfCoordinator) public {\\n * @dev         <initialization with other arguments goes here>\\n * @dev       }\\n * @dev   }\\n *\\n * @dev The oracle will have given you an ID for the VRF keypair they have\\n * @dev committed to (let's call it keyHash). Create subscription, fund it\\n * @dev and your consumer contract as a consumer of it (see VRFCoordinatorInterface\\n * @dev subscription management functions).\\n * @dev Call requestRandomWords(keyHash, subId, minimumRequestConfirmations,\\n * @dev callbackGasLimit, numWords),\\n * @dev see (VRFCoordinatorInterface for a description of the arguments).\\n *\\n * @dev Once the VRFCoordinator has received and validated the oracle's response\\n * @dev to your request, it will call your contract's fulfillRandomWords method.\\n *\\n * @dev The randomness argument to fulfillRandomWords is a set of random words\\n * @dev generated from your requestId and the blockHash of the request.\\n *\\n * @dev If your contract could have concurrent requests open, you can use the\\n * @dev requestId returned from requestRandomWords to track which response is associated\\n * @dev with which randomness request.\\n * @dev See \\\"SECURITY CONSIDERATIONS\\\" for principles to keep in mind,\\n * @dev if your contract could have multiple requests in flight simultaneously.\\n *\\n * @dev Colliding `requestId`s are cryptographically impossible as long as seeds\\n * @dev differ.\\n *\\n * *****************************************************************************\\n * @dev SECURITY CONSIDERATIONS\\n *\\n * @dev A method with the ability to call your fulfillRandomness method directly\\n * @dev could spoof a VRF response with any random value, so it's critical that\\n * @dev it cannot be directly called by anything other than this base contract\\n * @dev (specifically, by the VRFConsumerBase.rawFulfillRandomness method).\\n *\\n * @dev For your users to trust that your contract's random behavior is free\\n * @dev from malicious interference, it's best if you can write it so that all\\n * @dev behaviors implied by a VRF response are executed *during* your\\n * @dev fulfillRandomness method. If your contract must store the response (or\\n * @dev anything derived from it) and use it later, you must ensure that any\\n * @dev user-significant behavior which depends on that stored value cannot be\\n * @dev manipulated by a subsequent VRF request.\\n *\\n * @dev Similarly, both miners and the VRF oracle itself have some influence\\n * @dev over the order in which VRF responses appear on the blockchain, so if\\n * @dev your contract could have multiple VRF requests in flight simultaneously,\\n * @dev you must ensure that the order in which the VRF responses arrive cannot\\n * @dev be used to manipulate your contract's user-significant behavior.\\n *\\n * @dev Since the block hash of the block which contains the requestRandomness\\n * @dev call is mixed into the input to the VRF *last*, a sufficiently powerful\\n * @dev miner could, in principle, fork the blockchain to evict the block\\n * @dev containing the request, forcing the request to be included in a\\n * @dev different block with a different hash, and therefore a different input\\n * @dev to the VRF. However, such an attack would incur a substantial economic\\n * @dev cost. This cost scales with the number of blocks the VRF oracle waits\\n * @dev until it calls responds to a request. It is for this reason that\\n * @dev that you can signal to an oracle you'd like them to wait longer before\\n * @dev responding to the request (however this is not enforced in the contract\\n * @dev and so remains effective only in the case of unmodified oracle software).\\n */\\nabstract contract VRFConsumerBaseV2 {\\n  error OnlyCoordinatorCanFulfill(address have, address want);\\n  // solhint-disable-next-line chainlink-solidity/prefix-immutable-variables-with-i\\n  address private immutable vrfCoordinator;\\n\\n  /**\\n   * @param _vrfCoordinator address of VRFCoordinator contract\\n   */\\n  constructor(address _vrfCoordinator) {\\n    vrfCoordinator = _vrfCoordinator;\\n  }\\n\\n  /**\\n   * @notice fulfillRandomness handles the VRF response. Your contract must\\n   * @notice implement it. See \\\"SECURITY CONSIDERATIONS\\\" above for important\\n   * @notice principles to keep in mind when implementing your fulfillRandomness\\n   * @notice method.\\n   *\\n   * @dev VRFConsumerBaseV2 expects its subcontracts to have a method with this\\n   * @dev signature, and will call it once it has verified the proof\\n   * @dev associated with the randomness. (It is triggered via a call to\\n   * @dev rawFulfillRandomness, below.)\\n   *\\n   * @param requestId The Id initially returned by requestRandomness\\n   * @param randomWords the VRF output expanded to the requested number of words\\n   */\\n  // solhint-disable-next-line chainlink-solidity/prefix-internal-functions-with-underscore\\n  function fulfillRandomWords(uint256 requestId, uint256[] memory randomWords) internal virtual;\\n\\n  // rawFulfillRandomness is called by VRFCoordinator when it receives a valid VRF\\n  // proof. rawFulfillRandomness then calls fulfillRandomness, after validating\\n  // the origin of the call\\n  function rawFulfillRandomWords(uint256 requestId, uint256[] memory randomWords) external {\\n    if (msg.sender != vrfCoordinator) {\\n      revert OnlyCoordinatorCanFulfill(msg.sender, vrfCoordinator);\\n    }\\n    fulfillRandomWords(requestId, randomWords);\\n  }\\n}\\n\",\"keccak256\":\"0x5a502a5ce16796565815b295bb2d18a0d26d6f23621f733918c971047c6091d7\",\"license\":\"MIT\"},\"@chainlink/contracts/src/v0.8/vrf/interfaces/VRFCoordinatorV2Interface.sol\":{\"content\":\"// SPDX-License-Identifier: MIT\\npragma solidity ^0.8.0;\\n\\n// solhint-disable-next-line interface-starts-with-i\\ninterface VRFCoordinatorV2Interface {\\n  /**\\n   * @notice Get configuration relevant for making requests\\n   * @return minimumRequestConfirmations global min for request confirmations\\n   * @return maxGasLimit global max for request gas limit\\n   * @return s_provingKeyHashes list of registered key hashes\\n   */\\n  function getRequestConfig() external view returns (uint16, uint32, bytes32[] memory);\\n\\n  /**\\n   * @notice Request a set of random words.\\n   * @param keyHash - Corresponds to a particular oracle job which uses\\n   * that key for generating the VRF proof. Different keyHash's have different gas price\\n   * ceilings, so you can select a specific one to bound your maximum per request cost.\\n   * @param subId  - The ID of the VRF subscription. Must be funded\\n   * with the minimum subscription balance required for the selected keyHash.\\n   * @param minimumRequestConfirmations - How many blocks you'd like the\\n   * oracle to wait before responding to the request. See SECURITY CONSIDERATIONS\\n   * for why you may want to request more. The acceptable range is\\n   * [minimumRequestBlockConfirmations, 200].\\n   * @param callbackGasLimit - How much gas you'd like to receive in your\\n   * fulfillRandomWords callback. Note that gasleft() inside fulfillRandomWords\\n   * may be slightly less than this amount because of gas used calling the function\\n   * (argument decoding etc.), so you may need to request slightly more than you expect\\n   * to have inside fulfillRandomWords. The acceptable range is\\n   * [0, maxGasLimit]\\n   * @param numWords - The number of uint256 random values you'd like to receive\\n   * in your fulfillRandomWords callback. Note these numbers are expanded in a\\n   * secure way by the VRFCoordinator from a single random value supplied by the oracle.\\n   * @return requestId - A unique identifier of the request. Can be used to match\\n   * a request to a response in fulfillRandomWords.\\n   */\\n  function requestRandomWords(\\n    bytes32 keyHash,\\n    uint64 subId,\\n    uint16 minimumRequestConfirmations,\\n    uint32 callbackGasLimit,\\n    uint32 numWords\\n  ) external returns (uint256 requestId);\\n\\n  /**\\n   * @notice Create a VRF subscription.\\n   * @return subId - A unique subscription id.\\n   * @dev You can manage the consumer set dynamically with addConsumer/removeConsumer.\\n   * @dev Note to fund the subscription, use transferAndCall. For example\\n   * @dev  LINKTOKEN.transferAndCall(\\n   * @dev    address(COORDINATOR),\\n   * @dev    amount,\\n   * @dev    abi.encode(subId));\\n   */\\n  function createSubscription() external returns (uint64 subId);\\n\\n  /**\\n   * @notice Get a VRF subscription.\\n   * @param subId - ID of the subscription\\n   * @return balance - LINK balance of the subscription in juels.\\n   * @return reqCount - number of requests for this subscription, determines fee tier.\\n   * @return owner - owner of the subscription.\\n   * @return consumers - list of consumer address which are able to use this subscription.\\n   */\\n  function getSubscription(\\n    uint64 subId\\n  ) external view returns (uint96 balance, uint64 reqCount, address owner, address[] memory consumers);\\n\\n  /**\\n   * @notice Request subscription owner transfer.\\n   * @param subId - ID of the subscription\\n   * @param newOwner - proposed new owner of the subscription\\n   */\\n  function requestSubscriptionOwnerTransfer(uint64 subId, address newOwner) external;\\n\\n  /**\\n   * @notice Request subscription owner transfer.\\n   * @param subId - ID of the subscription\\n   * @dev will revert if original owner of subId has\\n   * not requested that msg.sender become the new owner.\\n   */\\n  function acceptSubscriptionOwnerTransfer(uint64 subId) external;\\n\\n  /**\\n   * @notice Add a consumer to a VRF subscription.\\n   * @param subId - ID of the subscription\\n   * @param consumer - New consumer which can use the subscription\\n   */\\n  function addConsumer(uint64 subId, address consumer) external;\\n\\n  /**\\n   * @notice Remove a consumer from a VRF subscription.\\n   * @param subId - ID of the subscription\\n   * @param consumer - Consumer to remove from the subscription\\n   */\\n  function removeConsumer(uint64 subId, address consumer) external;\\n\\n  /**\\n   * @notice Cancel a subscription\\n   * @param subId - ID of the subscription\\n   * @param to - Where to send the remaining LINK to\\n   */\\n  function cancelSubscription(uint64 subId, address to) external;\\n\\n  /*\\n   * @notice Check to see if there exists a request commitment consumers\\n   * for all consumers and keyhashes for a given sub.\\n   * @param subId - ID of the subscription\\n   * @return true if there exists at least one unfulfilled request for the subscription, false\\n   * otherwise.\\n   */\\n  function pendingRequestExists(uint64 subId) external view returns (bool);\\n}\\n\",\"keccak256\":\"0x619d9d975540d65ef8d6332a67cbd0dda5b0f95b120b8da56695ed50c2f9fc30\",\"license\":\"MIT\"},\"@openzeppelin/contracts/access/Ownable.sol\":{\"content\":\"// SPDX-License-Identifier: MIT\\n// OpenZeppelin Contracts (last updated v5.0.0) (access/Ownable.sol)\\n\\npragma solidity ^0.8.20;\\n\\nimport {Context} from \\\"../utils/Context.sol\\\";\\n\\n/**\\n * @dev Contract module which provides a basic access control mechanism, where\\n * there is an account (an owner) that can be granted exclusive access to\\n * specific functions.\\n *\\n * The initial owner is set to the address provided by the deployer. This can\\n * later be changed with {transferOwnership}.\\n *\\n * This module is used through inheritance. It will make available the modifier\\n * `onlyOwner`, which can be applied to your functions to restrict their use to\\n * the owner.\\n */\\nabstract contract Ownable is Context {\\n    address private _owner;\\n\\n    /**\\n     * @dev The caller account is not authorized to perform an operation.\\n     */\\n    error OwnableUnauthorizedAccount(address account);\\n\\n    /**\\n     * @dev The owner is not a valid owner account. (eg. `address(0)`)\\n     */\\n    error OwnableInvalidOwner(address owner);\\n\\n    event OwnershipTransferred(address indexed previousOwner, address indexed newOwner);\\n\\n    /**\\n     * @dev Initializes the contract setting the address provided by the deployer as the initial owner.\\n     */\\n    constructor(address initialOwner) {\\n        if (initialOwner == address(0)) {\\n            revert OwnableInvalidOwner(address(0));\\n        }\\n        _transferOwnership(initialOwner);\\n    }\\n\\n    /**\\n     * @dev Throws if called by any account other than the owner.\\n     */\\n    modifier onlyOwner() {\\n        _checkOwner();\\n        _;\\n    }\\n\\n    /**\\n     * @dev Returns the address of the current owner.\\n     */\\n    function owner() public view virtual returns (address) {\\n        return _owner;\\n    }\\n\\n    /**\\n     * @dev Throws if the sender is not the owner.\\n     */\\n    function _checkOwner() internal view virtual {\\n        if (owner() != _msgSender()) {\\n            revert OwnableUnauthorizedAccount(_msgSender());\\n        }\\n    }\\n\\n    /**\\n     * @dev Leaves the contract without owner. It will not be possible to call\\n     * `onlyOwner` functions. Can only be called by the current owner.\\n     *\\n     * NOTE: Renouncing ownership will leave the contract without an owner,\\n     * thereby disabling any functionality that is only available to the owner.\\n     */\\n    function renounceOwnership() public virtual onlyOwner {\\n        _transferOwnership(address(0));\\n    }\\n\\n    /**\\n     * @dev Transfers ownership of the contract to a new account (`newOwner`).\\n     * Can only be called by the current owner.\\n     */\\n    function transferOwnership(address newOwner) public virtual onlyOwner {\\n        if (newOwner == address(0)) {\\n            revert OwnableInvalidOwner(address(0));\\n        }\\n        _transferOwnership(newOwner);\\n    }\\n\\n    /**\\n     * @dev Transfers ownership of the contract to a new account (`newOwner`).\\n     * Internal function without access restriction.\\n     */\\n    function _transferOwnership(address newOwner) internal virtual {\\n        address oldOwner = _owner;\\n        _owner = newOwner;\\n        emit OwnershipTransferred(oldOwner, newOwner);\\n    }\\n}\\n\",\"keccak256\":\"0xff6d0bb2e285473e5311d9d3caacb525ae3538a80758c10649a4d61029b017bb\",\"license\":\"MIT\"},\"@openzeppelin/contracts/utils/Context.sol\":{\"content\":\"// SPDX-License-Identifier: MIT\\n// OpenZeppelin Contracts (last updated v5.0.1) (utils/Context.sol)\\n\\npragma solidity ^0.8.20;\\n\\n/**\\n * @dev Provides information about the current execution context, including the\\n * sender of the transaction and its data. While these are generally available\\n * via msg.sender and msg.data, they should not be accessed in such a direct\\n * manner, since when dealing with meta-transactions the account sending and\\n * paying for execution may not be the actual sender (as far as an application\\n * is concerned).\\n *\\n * This contract is only required for intermediate, library-like contracts.\\n */\\nabstract contract Context {\\n    function _msgSender() internal view virtual returns (address) {\\n        return msg.sender;\\n    }\\n\\n    function _msgData() internal view virtual returns (bytes calldata) {\\n        return msg.data;\\n    }\\n\\n    function _contextSuffixLength() internal view virtual returns (uint256) {\\n        return 0;\\n    }\\n}\\n\",\"keccak256\":\"0x493033a8d1b176a037b2cc6a04dad01a5c157722049bbecf632ca876224dd4b2\",\"license\":\"MIT\"},\"@openzeppelin/contracts/utils/ReentrancyGuard.sol\":{\"content\":\"// SPDX-License-Identifier: MIT\\n// OpenZeppelin Contracts (last updated v5.1.0) (utils/ReentrancyGuard.sol)\\n\\npragma solidity ^0.8.20;\\n\\n/**\\n * @dev Contract module that helps prevent reentrant calls to a function.\\n *\\n * Inheriting from `ReentrancyGuard` will make the {nonReentrant} modifier\\n * available, which can be applied to functions to make sure there are no nested\\n * (reentrant) calls to them.\\n *\\n * Note that because there is a single `nonReentrant` guard, functions marked as\\n * `nonReentrant` may not call one another. This can be worked around by making\\n * those functions `private`, and then adding `external` `nonReentrant` entry\\n * points to them.\\n *\\n * TIP: If EIP-1153 (transient storage) is available on the chain you're deploying at,\\n * consider using {ReentrancyGuardTransient} instead.\\n *\\n * TIP: If you would like to learn more about reentrancy and alternative ways\\n * to protect against it, check out our blog post\\n * https://blog.openzeppelin.com/reentrancy-after-istanbul/[Reentrancy After Istanbul].\\n */\\nabstract contract ReentrancyGuard {\\n    // Booleans are more expensive than uint256 or any type that takes up a full\\n    // word because each write operation emits an extra SLOAD to first read the\\n    // slot's contents, replace the bits taken up by the boolean, and then write\\n    // back. This is the compiler's defense against contract upgrades and\\n    // pointer aliasing, and it cannot be disabled.\\n\\n    // The values being non-zero value makes deployment a bit more expensive,\\n    // but in exchange the refund on every call to nonReentrant will be lower in\\n    // amount. Since refunds are capped to a percentage of the total\\n    // transaction's gas, it is best to keep them low in cases like this one, to\\n    // increase the likelihood of the full refund coming into effect.\\n    uint256 private constant NOT_ENTERED = 1;\\n    uint256 private constant ENTERED = 2;\\n\\n    uint256 private _status;\\n\\n    /**\\n     * @dev Unauthorized reentrant call.\\n     */\\n    error ReentrancyGuardReentrantCall();\\n\\n    constructor() {\\n        _status = NOT_ENTERED;\\n    }\\n\\n    /**\\n     * @dev Prevents a contract from calling itself, directly or indirectly.\\n     * Calling a `nonReentrant` function from another `nonReentrant`\\n     * function is not supported. It is possible to prevent this from happening\\n     * by making the `nonReentrant` function external, and making it call a\\n     * `private` function that does the actual work.\\n     */\\n    modifier nonReentrant() {\\n        _nonReentrantBefore();\\n        _;\\n        _nonReentrantAfter();\\n    }\\n\\n    function _nonReentrantBefore() private {\\n        // On the first call to nonReentrant, _status will be NOT_ENTERED\\n        if (_status == ENTERED) {\\n            revert ReentrancyGuardReentrantCall();\\n        }\\n\\n        // Any calls to nonReentrant after this point will fail\\n        _status = ENTERED;\\n    }\\n\\n    function _nonReentrantAfter() private {\\n        // By storing the original value once again, a refund is triggered (see\\n        // https://eips.ethereum.org/EIPS/eip-2200)\\n        _status = NOT_ENTERED;\\n    }\\n\\n    /**\\n     * @dev Returns true if the reentrancy guard is currently set to \\\"entered\\\", which indicates there is a\\n     * `nonReentrant` function in the call stack.\\n     */\\n    function _reentrancyGuardEntered() internal view returns (bool) {\\n        return _status == ENTERED;\\n    }\\n}\\n\",\"keccak256\":\"0x11a5a79827df29e915a12740caf62fe21ebe27c08c9ae3e09abe9ee3ba3866d3\",\"license\":\"MIT\"},\"contracts/LotteryGame.sol\":{\"content\":\"// SPDX-License-Identifier: UNLICENSED\\npragma solidity ^0.8.20;\\n\\nimport {VRFCoordinatorV2Interface} from \\\"@chainlink/contracts/src/v0.8/vrf/interfaces/VRFCoordinatorV2Interface.sol\\\";\\nimport {Ownable} from \\\"@openzeppelin/contracts/access/Ownable.sol\\\";\\nimport {ReentrancyGuard} from \\\"@openzeppelin/contracts/utils/ReentrancyGuard.sol\\\";\\nimport {VRFConsumerBaseV2} from \\\"@chainlink/contracts/src/v0.8/vrf/VRFConsumerBaseV2.sol\\\";\\nimport {ILotteryManager} from \\\"./LotteryManager.sol\\\";\\n\\nerror OnlyManager(string reason);\\nerror NoFunds();\\n\\ncontract LotteryGame is VRFConsumerBaseV2, Ownable, ReentrancyGuard {\\n    ILotteryManager public manager;\\n\\n    modifier onlyManager() {\\n        if (address(manager) != msg.sender) {\\n            revert OnlyManager(\\\"Only callable by lottery manager!\\\");\\n        }\\n        _;\\n    }\\n\\n    // VRF fields\\n    VRFCoordinatorV2Interface private immutable COORDINATOR;\\n    uint256 private immutable SUBSCRIPTION_ID;\\n    bytes32 private immutable KEY_HASH;\\n    uint32 private immutable CALLBACK_GAS_LIMIT = 100000;\\n    uint16 private immutable REQUEST_CONFIRMATIONS = 3;\\n    // VRF does not guarantee unique words, therefore, we fetch one random word which is then used deterministically\\n    // for determining the winners.\\n    uint32 private immutable NUM_WORDS = 1;\\n\\n    mapping(uint256 => uint256) public requestIdToLotteryId;\\n    mapping(uint256 => uint256) public requestIdToNumberOfWinners;\\n    mapping(uint256 => uint256) public requestIdToLotteryPrizePool;\\n\\n    mapping(address => uint256) public pendingWithdrawals;\\n    event WinnersDrawn(\\n        uint256 indexed lotteryId,\\n        ILotteryManager.ParticipationStruct[] winners,\\n        uint256 prizePerWinner,\\n        uint256 seed\\n    );\\n    event Deposit(address indexed to, uint256 amount);\\n\\n    struct LotteryResult {\\n        bool completed;\\n        uint256 timestamp;\\n        ILotteryManager.ParticipationStruct[] winners;\\n        uint256 prizePerWinner;\\n        uint256 seed;\\n    }\\n\\n    mapping(uint256 => LotteryResult) public lotteryResults;\\n\\n    constructor(\\n        address vrfCoordinator,\\n        bytes32 _keyHash,\\n        uint256 subscriptionId,\\n        address managerAddress\\n    ) VRFConsumerBaseV2(vrfCoordinator) Ownable(msg.sender) {\\n        COORDINATOR = VRFCoordinatorV2Interface(vrfCoordinator);\\n        KEY_HASH = _keyHash;\\n        SUBSCRIPTION_ID = subscriptionId;\\n        manager = ILotteryManager(managerAddress);\\n    }\\n\\n    // only callable by the LotteryManager contract\\n    function drawWinners(\\n        uint256 lotteryId,\\n        uint256 numberOfWinners\\n    ) external payable onlyManager {\\n        uint256 expected = manager.getJackpot(lotteryId);\\n        if (msg.value != expected) revert NoFunds();\\n\\n        // request random number\\n        uint256 requestId = COORDINATOR.requestRandomWords(\\n            KEY_HASH,\\n            uint64(SUBSCRIPTION_ID),\\n            REQUEST_CONFIRMATIONS,\\n            CALLBACK_GAS_LIMIT,\\n            NUM_WORDS\\n        );\\n\\n        // save lotteryId under that request\\n        requestIdToLotteryId[requestId] = lotteryId;\\n        requestIdToNumberOfWinners[requestId] = numberOfWinners;\\n        requestIdToLotteryPrizePool[requestId] = msg.value;\\n    }\\n\\n    // callback called by vrf\\n    function fulfillRandomWords(\\n        uint256 requestId,\\n        uint256[] memory randomWords\\n    ) internal override {\\n        uint256 lotteryId = requestIdToLotteryId[requestId];\\n        uint256 numberOfWinners = requestIdToNumberOfWinners[requestId];\\n\\n        ILotteryManager.LotteryStruct memory lottery = manager.getLottery(\\n            lotteryId\\n        );\\n        ILotteryManager.ParticipationStruct[] memory participants = manager\\n            .getLotteryParticipants(lotteryId);\\n\\n        // select winners\\n        ILotteryManager.ParticipationStruct[] memory winners = _selectWinners(\\n            participants,\\n            numberOfWinners,\\n            randomWords[0]\\n        );\\n\\n        // calculate prizes\\n        uint256 totalPrize = requestIdToLotteryPrizePool[requestId];\\n        uint256 platformFee = (totalPrize * lottery.servicePercent) / 100;\\n        uint256 prizePerWinner = (totalPrize - platformFee) / numberOfWinners;\\n\\n        // 4) **deposit** into each recipient\\u2019s withdrawal balance\\n        for (uint256 i = 0; i < winners.length; i++) {\\n            pendingWithdrawals[winners[i].account] += prizePerWinner;\\n            emit Deposit(winners[i].account, prizePerWinner);\\n        }\\n        // deposit the owner fee\\n        pendingWithdrawals[lottery.owner] += platformFee;\\n        emit Deposit(lottery.owner, platformFee);\\n\\n        emit WinnersDrawn(lotteryId, winners, prizePerWinner, randomWords[0]);\\n\\n        LotteryResult storage result = lotteryResults[lotteryId];\\n        result.completed = true;\\n        result.timestamp = block.timestamp;\\n        result.prizePerWinner = prizePerWinner;\\n        result.seed = randomWords[0];\\n\\n        for (uint256 i = 0; i < winners.length; i++) {\\n            result.winners.push(winners[i]);\\n        }\\n\\n        // cleanup\\n        delete requestIdToLotteryId[requestId];\\n        delete requestIdToNumberOfWinners[requestId];\\n        delete requestIdToLotteryPrizePool[requestId];\\n    }\\n\\n    function _selectWinners(\\n        ILotteryManager.ParticipationStruct[] memory participants,\\n        uint256 _numberOfWinners,\\n        uint256 seed\\n    ) private pure returns (ILotteryManager.ParticipationStruct[] memory) {\\n        ILotteryManager.ParticipationStruct[]\\n            memory selected = new ILotteryManager.ParticipationStruct[](\\n                _numberOfWinners\\n            );\\n        uint256[] memory indices = _fisherYates(participants.length, seed);\\n\\n        for (uint256 i = 0; i < _numberOfWinners; i++) {\\n            selected[i] = participants[indices[i]];\\n        }\\n\\n        return selected;\\n    }\\n\\n    // shuffle\\n    function _fisherYates(\\n        uint256 n,\\n        uint256 seed\\n    ) private pure returns (uint256[] memory) {\\n        uint256[] memory indices = new uint256[](n);\\n        for (uint256 i = 0; i < n; i++) indices[i] = i;\\n\\n        for (uint256 i = n - 1; i > 0; i--) {\\n            // select\\n            uint256 j = uint256(keccak256(abi.encodePacked(seed, i))) % (i + 1);\\n            // swap\\n            (indices[i], indices[j]) = (indices[j], indices[i]);\\n        }\\n\\n        return indices;\\n    }\\n\\n    // recipients (winners & owner) call this to pull their ETH\\n    function withdrawPayments() external nonReentrant {\\n        uint256 amount = pendingWithdrawals[msg.sender];\\n        if (amount == 0) revert NoFunds();\\n        pendingWithdrawals[msg.sender] = 0;\\n        (bool ok, ) = payable(msg.sender).call{value: amount}(\\\"\\\");\\n        if (!ok) revert NoFunds();\\n    }\\n\\n    function getLotteryResults(\\n        uint256 lotteryId\\n    ) external view returns (LotteryResult memory) {\\n        return lotteryResults[lotteryId];\\n    }\\n\\n    receive() external payable {}\\n}\\n\",\"keccak256\":\"0xb79bd48ff8c716f99a68165760990f1048473f192dd3686072c0e93540ab484c\",\"license\":\"UNLICENSED\"},\"contracts/LotteryManager.sol\":{\"content\":\"// SPDX-License-Identifier: UNLICENSED\\npragma solidity ^0.8.20;\\n\\nimport {Ownable} from \\\"@openzeppelin/contracts/access/Ownable.sol\\\";\\n\\nerror NoLotteryOwner(string reason);\\nerror OnlyGame(string reason);\\nerror SimpleError(string reason);\\n\\ninterface ILotteryManager {\\n    struct LotteryStruct {\\n        uint256 id;\\n        string title;\\n        string description;\\n        string imageURL;\\n        uint256 ticketPrice;\\n        uint256 numOfParticipants;\\n        uint256 servicePercent;\\n        bool drawn;\\n        address owner;\\n        uint256 createdAt;\\n        uint256 expiresAt;\\n    }\\n    struct ParticipationStruct {\\n        address account;\\n        string lotteryNumber;\\n    }\\n    struct LuckyNumber {\\n        string number;\\n        bool isUsed;\\n    }\\n\\n    function createLottery(\\n        string memory title,\\n        string memory description,\\n        string memory imageURL,\\n        uint256 prize,\\n        uint256 ticketPrice,\\n        uint256 expiresAt\\n    ) external;\\n\\n    function importLuckyNumbers(\\n        uint256 id,\\n        string[] memory luckyNumbers\\n    ) external;\\n    function buyTicket(uint256 id, uint256 luckyNumberIndex) external payable;\\n    function getAvailableLuckyNumbers(\\n        uint256 lotteryId\\n    ) external view returns (string[] memory available);\\n    function getLotteryParticipantsAddresses(\\n        uint256 id\\n    ) external view returns (address[] memory);\\n    function getLotteryParticipants(\\n        uint256 id\\n    ) external view returns (ParticipationStruct[] memory);\\n    function getJackpot(uint256 lotteryId) external view returns (uint256);\\n    function getLottery(\\n        uint256 lotteryId\\n    ) external view returns (LotteryStruct memory);\\n    function getLotteries() external view returns (LotteryStruct[] memory);\\n}\\n\\ninterface ILotteryGame {\\n    function drawWinners(\\n        uint256 lotteryId,\\n        uint256 numberOfWinners\\n    ) external payable;\\n}\\n\\ncontract LotteryManager is Ownable, ILotteryManager {\\n    ILotteryGame public game;\\n    uint256 private _totalLotteries;\\n    uint256 private constant MAX_WINNERS = 50;\\n    uint256 public platformBalance;\\n\\n    // mappings\\n    mapping(uint256 => LotteryStruct) private lotteries;\\n    mapping(uint256 => ParticipationStruct[]) private lotteryParticipants;\\n    mapping(uint256 => LuckyNumber[]) private lotteryLuckyNumbers;\\n\\n    // events (define log schema)\\n    event LotteryCreated(uint256 indexed id, address indexed owner);\\n    event TicketBought(uint256 indexed id, address indexed owner);\\n    event LuckyNumbersImported(uint256 indexed id, uint256 count);\\n\\n    // using this makes sure that the function is only executable by the owner of the lottery.\\n    modifier onlyLotteryOwner(uint256 id) {\\n        if (lotteries[id].owner != msg.sender) {\\n            revert NoLotteryOwner(\\\"Only callable by owner!\\\");\\n        }\\n        _;\\n    }\\n\\n    modifier onlyGame() {\\n        if (address(game) != msg.sender) {\\n            revert OnlyGame(\\\"Only callable by lottery game!\\\");\\n        }\\n        _;\\n    }\\n    constructor() Ownable(msg.sender) {}\\n\\n    function setGame(address _game) public onlyOwner {\\n        game = ILotteryGame(_game);\\n    }\\n\\n    // everyone can create a Lottery\\n    function createLottery(\\n        string memory title,\\n        string memory description,\\n        string memory imageURL,\\n        uint256 ticketPrice,\\n        uint256 servicePercent,\\n        uint256 expiresAt\\n    ) external {\\n        // sanity checks\\n        if (bytes(title).length == 0)\\n            revert SimpleError(\\\"Title cannot be empty\\\");\\n        if (ticketPrice == 0)\\n            revert SimpleError(\\\"Ticket Prize must be positive\\\");\\n        if (expiresAt <= block.timestamp)\\n            revert SimpleError(\\\"Expiration must be in future\\\");\\n\\n        uint256 lotteryId = _totalLotteries;\\n        _totalLotteries += 1;\\n\\n        // create new lottery\\n        LotteryStruct memory newLottery = LotteryStruct({\\n            id: lotteryId,\\n            title: title,\\n            imageURL: imageURL,\\n            description: description,\\n            ticketPrice: ticketPrice,\\n            servicePercent: servicePercent,\\n            numOfParticipants: 0,\\n            drawn: false,\\n            owner: msg.sender,\\n            createdAt: block.timestamp,\\n            expiresAt: expiresAt\\n        });\\n\\n        // add lottery\\n        lotteries[lotteryId] = newLottery;\\n        // Fire event\\n        emit LotteryCreated(lotteryId, msg.sender);\\n    }\\n\\n    // owner uploads n lucky numbers\\n    function importLuckyNumbers(\\n        uint256 lotteryId,\\n        string[] memory luckyNumbers\\n    ) external onlyLotteryOwner(lotteryId) {\\n        if (lotteryLuckyNumbers[lotteryId].length != 0)\\n            revert SimpleError(\\\"Already imported\\\");\\n        if (lotteries[lotteryId].numOfParticipants != 0)\\n            revert SimpleError(\\\"Participants already joined\\\");\\n        if (luckyNumbers.length == 0) revert SimpleError(\\\"Empty list\\\");\\n\\n        for (uint256 i = 0; i < luckyNumbers.length; i++) {\\n            lotteryLuckyNumbers[lotteryId].push(\\n                LuckyNumber({number: luckyNumbers[i], isUsed: false})\\n            );\\n        }\\n        emit LuckyNumbersImported(lotteryId, luckyNumbers.length);\\n    }\\n\\n    // function callable by anyone\\n    function buyTicket(\\n        uint256 lotteryId,\\n        uint256 luckyNumberIndex\\n    ) external payable {\\n        // reference lottery on chain\\n        LotteryStruct storage lottery = lotteries[lotteryId];\\n        if (msg.value < lottery.ticketPrice)\\n            revert SimpleError(\\\"Insufficient ETH\\\");\\n        if (block.timestamp > lottery.expiresAt)\\n            revert SimpleError(\\\"Cannot buy Tickets anymore.\\\");\\n        if (lottery.drawn) revert SimpleError(\\\"Lottery already drawn!\\\");\\n\\n        LuckyNumber storage luckyNumber = lotteryLuckyNumbers[lotteryId][\\n            luckyNumberIndex\\n        ];\\n        // use index, because it is more gas friendly than string comparison using hashing\\n        if (luckyNumber.isUsed) revert SimpleError(\\\"Number already used!\\\");\\n\\n        lotteryParticipants[lotteryId].push(\\n            ParticipationStruct({\\n                account: msg.sender,\\n                lotteryNumber: luckyNumber.number\\n            })\\n        );\\n\\n        lottery.numOfParticipants++;\\n        luckyNumber.isUsed = true;\\n\\n        emit TicketBought(lotteryId, msg.sender);\\n    }\\n\\n    // draw winners\\n    function drawWinners(\\n        uint256 lotteryId,\\n        uint256 numberOfWinners\\n    ) external onlyLotteryOwner(lotteryId) {\\n        ILotteryManager.LotteryStruct storage lottery = lotteries[lotteryId];\\n        if (lottery.drawn) revert SimpleError(\\\"Lottery already drawn\\\");\\n        //        if(block.timestamp < lottery.expiresAt) revert SimpleError (\\\"Lottery not expired yet\\\");\\n        if (numberOfWinners < 1)\\n            revert SimpleError(\\\"Must have at least one winner\\\");\\n        if (\\n            numberOfWinners > lottery.numOfParticipants ||\\n            numberOfWinners > MAX_WINNERS\\n        ) revert SimpleError(\\\"Too many winners\\\");\\n\\n        // forward to game\\n        uint256 jackpot = lottery.ticketPrice * lottery.numOfParticipants;\\n        lottery.drawn = true;\\n        game.drawWinners{value: jackpot}(lotteryId, numberOfWinners);\\n    }\\n\\n    function getAvailableLuckyNumbers(\\n        uint256 lotteryId\\n    ) external view returns (string[] memory available) {\\n        LuckyNumber[] storage all = lotteryLuckyNumbers[lotteryId];\\n\\n        uint256 count = 0;\\n        for (uint256 i = 0; i < all.length; i++) {\\n            if (!all[i].isUsed) {\\n                count++;\\n            }\\n        }\\n\\n        available = new string[](count);\\n\\n        uint256 j = 0;\\n        for (uint256 i = 0; i < all.length; i++) {\\n            if (!all[i].isUsed) {\\n                available[j] = all[i].number;\\n                j++;\\n            }\\n        }\\n\\n        return available;\\n    }\\n\\n    function getLottery(\\n        uint256 lotteryId\\n    ) external view returns (LotteryStruct memory) {\\n        return lotteries[lotteryId];\\n    }\\n\\n    function getLotteries()\\n        external\\n        view\\n        returns (LotteryStruct[] memory _lotteries)\\n    {\\n        _lotteries = new LotteryStruct[](_totalLotteries);\\n        for (uint256 i = 0; i < _totalLotteries; i++) {\\n            _lotteries[i] = _lotteries[i];\\n        }\\n    }\\n\\n    // getter for the lottery numOfParticipant\\n    function getLotteryParticipantsAddresses(\\n        uint256 lotteryId\\n    ) external view returns (address[] memory) {\\n        address[] memory _participations = new address[](\\n            lotteryParticipants[lotteryId].length\\n        );\\n        for (uint256 i = 0; i < lotteryParticipants[lotteryId].length; ++i) {\\n            _participations[i] = lotteryParticipants[lotteryId][i].account;\\n        }\\n        return _participations;\\n    }\\n\\n    function getLotteryParticipants(\\n        uint256 lotteryId\\n    ) external view returns (ParticipationStruct[] memory) {\\n        ParticipationStruct[]\\n            memory _participations = new ParticipationStruct[](\\n                lotteryParticipants[lotteryId].length\\n            );\\n        for (uint256 i = 0; i < lotteryParticipants[lotteryId].length; ++i) {\\n            _participations[i] = lotteryParticipants[lotteryId][i];\\n        }\\n        return _participations;\\n    }\\n\\n    function getJackpot(uint256 lotteryId) external view returns (uint256) {\\n        LotteryStruct storage lottery = lotteries[lotteryId];\\n        return lottery.ticketPrice * lottery.numOfParticipants;\\n    }\\n\\n    function getLuckyNumbers(\\n        uint256 lotteryId\\n    ) external view returns (string[] memory luckyNumbers) {\\n        luckyNumbers = new string[](lotteryLuckyNumbers[lotteryId].length);\\n        for (uint256 i = 0; i < lotteryLuckyNumbers[lotteryId].length; ++i) {\\n            luckyNumbers[i] = lotteryLuckyNumbers[lotteryId][i].number;\\n        }\\n        return luckyNumbers;\\n    }\\n\\n    function getTotalLotteries() external view returns (uint256) {\\n        return _totalLotteries;\\n    }\\n\\n    function getBalance() public view returns (uint256) {\\n        return address(this).balance;\\n    }\\n}\\n\",\"keccak256\":\"0x34fe2035229a103fb05d323b7d8b6815f23b8de58e2ac005232a24d8938e7249\",\"license\":\"UNLICENSED\"}},\"version\":1}",
+  "bytecode": "0x610160604052620186a0610100526003610120526001610140523480156200002657600080fd5b5060405162001a1b38038062001a1b83398101604081905262000049916200012c565b6001600160a01b03841660805233806200007d57604051631e4fbdf760e01b81526000600482015260240160405180910390fd5b6200008881620000bf565b50600180556001600160a01b0393841660a05260e09290925260c052600280546001600160a01b0319169190921617905562000177565b600080546001600160a01b038381166001600160a01b0319831681178455604051919092169283917f8be0079c531659141344cd1fd0a4f28419497f9722a3daafe3b4186f6b6457e09190a35050565b80516001600160a01b03811681146200012757600080fd5b919050565b600080600080608085870312156200014357600080fd5b6200014e856200010f565b935060208501519250604085015191506200016c606086016200010f565b905092959194509250565b60805160a05160c05160e051610100516101205161014051611842620001d960003960006105ff015260006105ab015260006105d701526000610552015260006105810152600061062901526000818161030e015261035001526118426000f3fe6080604052600436106100c65760003560e01c8063662b89b01161007f578063916f04ff11610059578063916f04ff14610221578063b08b3a511461024e578063f2fde38b146102b6578063f3f43703146102d657600080fd5b8063662b89b0146101c1578063715018a6146101ee5780638da5cb5b1461020357600080fd5b80631fe543e3146100d2578063481c6a75146100f457806348ff6225146101315780635a79a3e31461016c5780636103d70b1461019957806362074fbf146101ae57600080fd5b366100cd57005b600080fd5b3480156100de57600080fd5b506100f26100ed366004611085565b610303565b005b34801561010057600080fd5b50600254610114906001600160a01b031681565b6040516001600160a01b0390911681526020015b60405180910390f35b34801561013d57600080fd5b5061015e61014c366004611127565b60046020526000908152604090205481565b604051908152602001610128565b34801561017857600080fd5b5061015e610187366004611127565b60056020526000908152604090205481565b3480156101a557600080fd5b506100f2610390565b6100f26101bc366004611140565b61044e565b3480156101cd57600080fd5b506101e16101dc366004611127565b6106cb565b6040516101289190611186565b3480156101fa57600080fd5b506100f261084c565b34801561020f57600080fd5b506000546001600160a01b0316610114565b34801561022d57600080fd5b5061015e61023c366004611127565b60036020526000908152604090205481565b34801561025a57600080fd5b50610294610269366004611127565b600760205260009081526040902080546001820154600383015460049093015460ff90921692909184565b6040805194151585526020850193909352918301526060820152608001610128565b3480156102c257600080fd5b506100f26102d1366004611269565b61085e565b3480156102e257600080fd5b5061015e6102f1366004611269565b60066020526000908152604090205481565b336001600160a01b037f000000000000000000000000000000000000000000000000000000000000000016146103825760405163073e64fd60e21b81523360048201526001600160a01b037f00000000000000000000000000000000000000000000000000000000000000001660248201526044015b60405180910390fd5b61038c828261089c565b5050565b610398610ccc565b33600090815260066020526040812054908190036103c95760405163043f9e1160e41b815260040160405180910390fd5b336000818152600660205260408082208290555190919083908381818185875af1925050503d806000811461041a576040519150601f19603f3d011682016040523d82523d6000602084013e61041f565b606091505b50509050806104415760405163043f9e1160e41b815260040160405180910390fd5b505061044c60018055565b565b6002546001600160a01b031633146104b357604051630d71e2fb60e11b815260206004820152602160248201527f4f6e6c792063616c6c61626c65206279206c6f7474657279206d616e616765726044820152602160f81b6064820152608401610379565b600254604051634ce4f92760e01b8152600481018490526000916001600160a01b031690634ce4f92790602401602060405180830381865afa1580156104fd573d6000803e3d6000fd5b505050506040513d601f19601f82011682018060405250810190610521919061128d565b90508034146105435760405163043f9e1160e41b815260040160405180910390fd5b6040516305d3b1d360e41b81527f0000000000000000000000000000000000000000000000000000000000000000600482015267ffffffffffffffff7f000000000000000000000000000000000000000000000000000000000000000016602482015261ffff7f000000000000000000000000000000000000000000000000000000000000000016604482015263ffffffff7f0000000000000000000000000000000000000000000000000000000000000000811660648301527f00000000000000000000000000000000000000000000000000000000000000001660848201526000907f00000000000000000000000000000000000000000000000000000000000000006001600160a01b031690635d3b1d309060a4016020604051808303816000875af115801561067a573d6000803e3d6000fd5b505050506040513d601f19601f8201168201806040525081019061069e919061128d565b60009081526003602090815260408083209690965560048152858220949094556005909352505020349055565b6106ff6040518060a00160405280600015158152602001600081526020016060815260200160008152602001600081525090565b6000828152600760209081526040808320815160a081018352815460ff1615158152600182015481850152600282018054845181870281018701865281815292969395948701949293919290919084015b82821015610829576000848152602090819020604080518082019091526002850290910180546001600160a01b031682526001810180549293919291840191610798906112a6565b80601f01602080910402602001604051908101604052809291908181526020018280546107c4906112a6565b80156108115780601f106107e657610100808354040283529160200191610811565b820191906000526020600020905b8154815290600101906020018083116107f457829003601f168201915b50505050508152505081526020019060010190610750565b505050508152602001600382015481526020016004820154815250509050919050565b610854610cf6565b61044c6000610d23565b610866610cf6565b6001600160a01b03811661089057604051631e4fbdf760e01b815260006004820152602401610379565b61089981610d23565b50565b60008281526003602090815260408083205460049283905281842054600254925163497422fb60e11b81529384018290529093909290916001600160a01b0316906392e845f690602401600060405180830381865afa158015610903573d6000803e3d6000fd5b505050506040513d6000823e601f3d908101601f1916820160405261092b919081019061136c565b60025460405163347d975d60e11b8152600481018690529192506000916001600160a01b03909116906368fb2eba90602401600060405180830381865afa15801561097a573d6000803e3d6000fd5b505050506040513d6000823e601f3d908101601f191682016040526109a29190810190611489565b905060006109cb8285886000815181106109be576109be611581565b6020026020010151610d73565b60008881526005602052604081205460c0860151929350916064906109f090846115ad565b6109fa91906115da565b9050600086610a0983856115ee565b610a1391906115da565b905060005b8451811015610aec578160066000878481518110610a3857610a38611581565b6020026020010151600001516001600160a01b03166001600160a01b031681526020019081526020016000206000828254610a739190611601565b92505081905550848181518110610a8c57610a8c611581565b6020026020010151600001516001600160a01b03167fe1fffcc4923d04b559f4d29a8bfc6cda04eb5b0d3c460751c2402c5c5cc9109c83604051610ad291815260200190565b60405180910390a280610ae481611614565b915050610a18565b506101008601516001600160a01b031660009081526006602052604081208054849290610b1a908490611601565b925050819055508561010001516001600160a01b03167fe1fffcc4923d04b559f4d29a8bfc6cda04eb5b0d3c460751c2402c5c5cc9109c83604051610b6191815260200190565b60405180910390a2877fa50861a18c1d40d588d7d049cff78152ee942a8a7ace5c12a5466784822650ff85838c600081518110610ba057610ba0611581565b6020026020010151604051610bb79392919061162d565b60405180910390a26000888152600760205260408120805460ff1916600190811782554290820155600381018390558a5190918b91610bf857610bf8611581565b6020026020010151816004018190555060005b8551811015610c965781600201868281518110610c2a57610c2a611581565b602090810291909101810151825460018082018555600094855293839020825160029092020180546001600160a01b0319166001600160a01b03909216919091178155918101519092820190610c809082611721565b5050508080610c8e90611614565b915050610c0b565b50505060009889525050600360209081526040808920899055600482528089208990556005909152872096909655505050505050565b600260015403610cef57604051633ee5aeb560e01b815260040160405180910390fd5b6002600155565b6000546001600160a01b0316331461044c5760405163118cdaa760e01b8152336004820152602401610379565b600080546001600160a01b038381166001600160a01b0319831681178455604051919092169283917f8be0079c531659141344cd1fd0a4f28419497f9722a3daafe3b4186f6b6457e09190a35050565b606060008367ffffffffffffffff811115610d9057610d90610fcd565b604051908082528060200260200182016040528015610dd657816020015b604080518082019091526000815260606020820152815260200190600190039081610dae5790505b5090506000610de6865185610e61565b905060005b85811015610e565786828281518110610e0657610e06611581565b602002602001015181518110610e1e57610e1e611581565b6020026020010151838281518110610e3857610e38611581565b60200260200101819052508080610e4e90611614565b915050610deb565b509095945050505050565b606060008367ffffffffffffffff811115610e7e57610e7e610fcd565b604051908082528060200260200182016040528015610ea7578160200160208202803683370190505b50905060005b84811015610ee55780828281518110610ec857610ec8611581565b602090810291909101015280610edd81611614565b915050610ead565b506000610ef36001866115ee565b90505b8015610fc3576000610f09826001611601565b60408051602081018890529081018490526060016040516020818303038152906040528051906020012060001c610f4091906117e1565b9050828181518110610f5457610f54611581565b6020026020010151838381518110610f6e57610f6e611581565b6020026020010151848481518110610f8857610f88611581565b60200260200101858481518110610fa157610fa1611581565b6020908102919091010191909152525080610fbb816117f5565b915050610ef6565b5090505b92915050565b634e487b7160e01b600052604160045260246000fd5b604051610160810167ffffffffffffffff8111828210171561100757611007610fcd565b60405290565b6040805190810167ffffffffffffffff8111828210171561100757611007610fcd565b604051601f8201601f1916810167ffffffffffffffff8111828210171561105957611059610fcd565b604052919050565b600067ffffffffffffffff82111561107b5761107b610fcd565b5060051b60200190565b6000806040838503121561109857600080fd5b8235915060208084013567ffffffffffffffff8111156110b757600080fd5b8401601f810186136110c857600080fd5b80356110db6110d682611061565b611030565b81815260059190911b820183019083810190888311156110fa57600080fd5b928401925b82841015611118578335825292840192908401906110ff565b80955050505050509250929050565b60006020828403121561113957600080fd5b5035919050565b6000806040838503121561115357600080fd5b50508035926020909101359150565b60005b8381101561117d578181015183820152602001611165565b50506000910152565b6000602080835260c0830184511515828501528185015160408181870152808701519150606060a08188015283835180865260e08901915060e08160051b8a01019550868501945060005b818110156112305789870360df19018352855180516001600160a01b03168852880151888801869052805186890181905261121181878b01848d01611162565b601f01601f1916979097018401965094870194918701916001016111d1565b505050808801516080880152505050608085015160a0850152809250505092915050565b6001600160a01b038116811461089957600080fd5b60006020828403121561127b57600080fd5b813561128681611254565b9392505050565b60006020828403121561129f57600080fd5b5051919050565b600181811c908216806112ba57607f821691505b6020821081036112da57634e487b7160e01b600052602260045260246000fd5b50919050565b600082601f8301126112f157600080fd5b815167ffffffffffffffff81111561130b5761130b610fcd565b61131e601f8201601f1916602001611030565b81815284602083860101111561133357600080fd5b611344826020830160208701611162565b949350505050565b8051801515811461135c57600080fd5b919050565b805161135c81611254565b60006020828403121561137e57600080fd5b815167ffffffffffffffff8082111561139657600080fd5b9083019061016082860312156113ab57600080fd5b6113b3610fe3565b825181526020830151828111156113c957600080fd5b6113d5878286016112e0565b6020830152506040830151828111156113ed57600080fd5b6113f9878286016112e0565b60408301525060608301518281111561141157600080fd5b61141d878286016112e0565b6060830152506080830151608082015260a083015160a082015260c083015160c082015261144d60e0840161134c565b60e08201526101009150611462828401611361565b91810191909152610120828101519082015261014091820151918101919091529392505050565b6000602080838503121561149c57600080fd5b825167ffffffffffffffff808211156114b457600080fd5b818501915085601f8301126114c857600080fd5b81516114d66110d682611061565b81815260059190911b830184019084810190888311156114f557600080fd5b8585015b83811015611574578051858111156115115760008081fd5b86016040818c03601f19018113156115295760008081fd5b61153161100d565b8983015161153e81611254565b81529082015190878211156115535760008081fd5b6115618d8b848601016112e0565b818b0152855250509186019186016114f9565b5098975050505050505050565b634e487b7160e01b600052603260045260246000fd5b634e487b7160e01b600052601160045260246000fd5b8082028115828204841417610fc757610fc7611597565b634e487b7160e01b600052601260045260246000fd5b6000826115e9576115e96115c4565b500490565b81810381811115610fc757610fc7611597565b80820180821115610fc757610fc7611597565b60006001820161162657611626611597565b5060010190565b6000606080830181845280875180835260808601915060808160051b87010192506020808a0160005b838110156116b857888603607f19018552815180516001600160a01b0316875283015160408488018190528151818901819052611698818b8b01858901611162565b601f01601f19169790970188019650509382019390820190600101611656565b505086019790975250604090930193909352509392505050565b601f82111561171c57600081815260208120601f850160051c810160208610156116f95750805b601f850160051c820191505b8181101561171857828155600101611705565b5050505b505050565b815167ffffffffffffffff81111561173b5761173b610fcd565b61174f8161174984546112a6565b846116d2565b602080601f831160018114611784576000841561176c5750858301515b600019600386901b1c1916600185901b178555611718565b600085815260208120601f198616915b828110156117b357888601518255948401946001909101908401611794565b50858210156117d15787850151600019600388901b60f8161c191681555b5050505050600190811b01905550565b6000826117f0576117f06115c4565b500690565b60008161180457611804611597565b50600019019056fea2646970667358221220d9f6a0bf803c0738562912db15487b3059739ba4476756f2f4a74e7c0e73001d64736f6c63430008140033",
+  "deployedBytecode": "0x6080604052600436106100c65760003560e01c8063662b89b01161007f578063916f04ff11610059578063916f04ff14610221578063b08b3a511461024e578063f2fde38b146102b6578063f3f43703146102d657600080fd5b8063662b89b0146101c1578063715018a6146101ee5780638da5cb5b1461020357600080fd5b80631fe543e3146100d2578063481c6a75146100f457806348ff6225146101315780635a79a3e31461016c5780636103d70b1461019957806362074fbf146101ae57600080fd5b366100cd57005b600080fd5b3480156100de57600080fd5b506100f26100ed366004611085565b610303565b005b34801561010057600080fd5b50600254610114906001600160a01b031681565b6040516001600160a01b0390911681526020015b60405180910390f35b34801561013d57600080fd5b5061015e61014c366004611127565b60046020526000908152604090205481565b604051908152602001610128565b34801561017857600080fd5b5061015e610187366004611127565b60056020526000908152604090205481565b3480156101a557600080fd5b506100f2610390565b6100f26101bc366004611140565b61044e565b3480156101cd57600080fd5b506101e16101dc366004611127565b6106cb565b6040516101289190611186565b3480156101fa57600080fd5b506100f261084c565b34801561020f57600080fd5b506000546001600160a01b0316610114565b34801561022d57600080fd5b5061015e61023c366004611127565b60036020526000908152604090205481565b34801561025a57600080fd5b50610294610269366004611127565b600760205260009081526040902080546001820154600383015460049093015460ff90921692909184565b6040805194151585526020850193909352918301526060820152608001610128565b3480156102c257600080fd5b506100f26102d1366004611269565b61085e565b3480156102e257600080fd5b5061015e6102f1366004611269565b60066020526000908152604090205481565b336001600160a01b037f000000000000000000000000000000000000000000000000000000000000000016146103825760405163073e64fd60e21b81523360048201526001600160a01b037f00000000000000000000000000000000000000000000000000000000000000001660248201526044015b60405180910390fd5b61038c828261089c565b5050565b610398610ccc565b33600090815260066020526040812054908190036103c95760405163043f9e1160e41b815260040160405180910390fd5b336000818152600660205260408082208290555190919083908381818185875af1925050503d806000811461041a576040519150601f19603f3d011682016040523d82523d6000602084013e61041f565b606091505b50509050806104415760405163043f9e1160e41b815260040160405180910390fd5b505061044c60018055565b565b6002546001600160a01b031633146104b357604051630d71e2fb60e11b815260206004820152602160248201527f4f6e6c792063616c6c61626c65206279206c6f7474657279206d616e616765726044820152602160f81b6064820152608401610379565b600254604051634ce4f92760e01b8152600481018490526000916001600160a01b031690634ce4f92790602401602060405180830381865afa1580156104fd573d6000803e3d6000fd5b505050506040513d601f19601f82011682018060405250810190610521919061128d565b90508034146105435760405163043f9e1160e41b815260040160405180910390fd5b6040516305d3b1d360e41b81527f0000000000000000000000000000000000000000000000000000000000000000600482015267ffffffffffffffff7f000000000000000000000000000000000000000000000000000000000000000016602482015261ffff7f000000000000000000000000000000000000000000000000000000000000000016604482015263ffffffff7f0000000000000000000000000000000000000000000000000000000000000000811660648301527f00000000000000000000000000000000000000000000000000000000000000001660848201526000907f00000000000000000000000000000000000000000000000000000000000000006001600160a01b031690635d3b1d309060a4016020604051808303816000875af115801561067a573d6000803e3d6000fd5b505050506040513d601f19601f8201168201806040525081019061069e919061128d565b60009081526003602090815260408083209690965560048152858220949094556005909352505020349055565b6106ff6040518060a00160405280600015158152602001600081526020016060815260200160008152602001600081525090565b6000828152600760209081526040808320815160a081018352815460ff1615158152600182015481850152600282018054845181870281018701865281815292969395948701949293919290919084015b82821015610829576000848152602090819020604080518082019091526002850290910180546001600160a01b031682526001810180549293919291840191610798906112a6565b80601f01602080910402602001604051908101604052809291908181526020018280546107c4906112a6565b80156108115780601f106107e657610100808354040283529160200191610811565b820191906000526020600020905b8154815290600101906020018083116107f457829003601f168201915b50505050508152505081526020019060010190610750565b505050508152602001600382015481526020016004820154815250509050919050565b610854610cf6565b61044c6000610d23565b610866610cf6565b6001600160a01b03811661089057604051631e4fbdf760e01b815260006004820152602401610379565b61089981610d23565b50565b60008281526003602090815260408083205460049283905281842054600254925163497422fb60e11b81529384018290529093909290916001600160a01b0316906392e845f690602401600060405180830381865afa158015610903573d6000803e3d6000fd5b505050506040513d6000823e601f3d908101601f1916820160405261092b919081019061136c565b60025460405163347d975d60e11b8152600481018690529192506000916001600160a01b03909116906368fb2eba90602401600060405180830381865afa15801561097a573d6000803e3d6000fd5b505050506040513d6000823e601f3d908101601f191682016040526109a29190810190611489565b905060006109cb8285886000815181106109be576109be611581565b6020026020010151610d73565b60008881526005602052604081205460c0860151929350916064906109f090846115ad565b6109fa91906115da565b9050600086610a0983856115ee565b610a1391906115da565b905060005b8451811015610aec578160066000878481518110610a3857610a38611581565b6020026020010151600001516001600160a01b03166001600160a01b031681526020019081526020016000206000828254610a739190611601565b92505081905550848181518110610a8c57610a8c611581565b6020026020010151600001516001600160a01b03167fe1fffcc4923d04b559f4d29a8bfc6cda04eb5b0d3c460751c2402c5c5cc9109c83604051610ad291815260200190565b60405180910390a280610ae481611614565b915050610a18565b506101008601516001600160a01b031660009081526006602052604081208054849290610b1a908490611601565b925050819055508561010001516001600160a01b03167fe1fffcc4923d04b559f4d29a8bfc6cda04eb5b0d3c460751c2402c5c5cc9109c83604051610b6191815260200190565b60405180910390a2877fa50861a18c1d40d588d7d049cff78152ee942a8a7ace5c12a5466784822650ff85838c600081518110610ba057610ba0611581565b6020026020010151604051610bb79392919061162d565b60405180910390a26000888152600760205260408120805460ff1916600190811782554290820155600381018390558a5190918b91610bf857610bf8611581565b6020026020010151816004018190555060005b8551811015610c965781600201868281518110610c2a57610c2a611581565b602090810291909101810151825460018082018555600094855293839020825160029092020180546001600160a01b0319166001600160a01b03909216919091178155918101519092820190610c809082611721565b5050508080610c8e90611614565b915050610c0b565b50505060009889525050600360209081526040808920899055600482528089208990556005909152872096909655505050505050565b600260015403610cef57604051633ee5aeb560e01b815260040160405180910390fd5b6002600155565b6000546001600160a01b0316331461044c5760405163118cdaa760e01b8152336004820152602401610379565b600080546001600160a01b038381166001600160a01b0319831681178455604051919092169283917f8be0079c531659141344cd1fd0a4f28419497f9722a3daafe3b4186f6b6457e09190a35050565b606060008367ffffffffffffffff811115610d9057610d90610fcd565b604051908082528060200260200182016040528015610dd657816020015b604080518082019091526000815260606020820152815260200190600190039081610dae5790505b5090506000610de6865185610e61565b905060005b85811015610e565786828281518110610e0657610e06611581565b602002602001015181518110610e1e57610e1e611581565b6020026020010151838281518110610e3857610e38611581565b60200260200101819052508080610e4e90611614565b915050610deb565b509095945050505050565b606060008367ffffffffffffffff811115610e7e57610e7e610fcd565b604051908082528060200260200182016040528015610ea7578160200160208202803683370190505b50905060005b84811015610ee55780828281518110610ec857610ec8611581565b602090810291909101015280610edd81611614565b915050610ead565b506000610ef36001866115ee565b90505b8015610fc3576000610f09826001611601565b60408051602081018890529081018490526060016040516020818303038152906040528051906020012060001c610f4091906117e1565b9050828181518110610f5457610f54611581565b6020026020010151838381518110610f6e57610f6e611581565b6020026020010151848481518110610f8857610f88611581565b60200260200101858481518110610fa157610fa1611581565b6020908102919091010191909152525080610fbb816117f5565b915050610ef6565b5090505b92915050565b634e487b7160e01b600052604160045260246000fd5b604051610160810167ffffffffffffffff8111828210171561100757611007610fcd565b60405290565b6040805190810167ffffffffffffffff8111828210171561100757611007610fcd565b604051601f8201601f1916810167ffffffffffffffff8111828210171561105957611059610fcd565b604052919050565b600067ffffffffffffffff82111561107b5761107b610fcd565b5060051b60200190565b6000806040838503121561109857600080fd5b8235915060208084013567ffffffffffffffff8111156110b757600080fd5b8401601f810186136110c857600080fd5b80356110db6110d682611061565b611030565b81815260059190911b820183019083810190888311156110fa57600080fd5b928401925b82841015611118578335825292840192908401906110ff565b80955050505050509250929050565b60006020828403121561113957600080fd5b5035919050565b6000806040838503121561115357600080fd5b50508035926020909101359150565b60005b8381101561117d578181015183820152602001611165565b50506000910152565b6000602080835260c0830184511515828501528185015160408181870152808701519150606060a08188015283835180865260e08901915060e08160051b8a01019550868501945060005b818110156112305789870360df19018352855180516001600160a01b03168852880151888801869052805186890181905261121181878b01848d01611162565b601f01601f1916979097018401965094870194918701916001016111d1565b505050808801516080880152505050608085015160a0850152809250505092915050565b6001600160a01b038116811461089957600080fd5b60006020828403121561127b57600080fd5b813561128681611254565b9392505050565b60006020828403121561129f57600080fd5b5051919050565b600181811c908216806112ba57607f821691505b6020821081036112da57634e487b7160e01b600052602260045260246000fd5b50919050565b600082601f8301126112f157600080fd5b815167ffffffffffffffff81111561130b5761130b610fcd565b61131e601f8201601f1916602001611030565b81815284602083860101111561133357600080fd5b611344826020830160208701611162565b949350505050565b8051801515811461135c57600080fd5b919050565b805161135c81611254565b60006020828403121561137e57600080fd5b815167ffffffffffffffff8082111561139657600080fd5b9083019061016082860312156113ab57600080fd5b6113b3610fe3565b825181526020830151828111156113c957600080fd5b6113d5878286016112e0565b6020830152506040830151828111156113ed57600080fd5b6113f9878286016112e0565b60408301525060608301518281111561141157600080fd5b61141d878286016112e0565b6060830152506080830151608082015260a083015160a082015260c083015160c082015261144d60e0840161134c565b60e08201526101009150611462828401611361565b91810191909152610120828101519082015261014091820151918101919091529392505050565b6000602080838503121561149c57600080fd5b825167ffffffffffffffff808211156114b457600080fd5b818501915085601f8301126114c857600080fd5b81516114d66110d682611061565b81815260059190911b830184019084810190888311156114f557600080fd5b8585015b83811015611574578051858111156115115760008081fd5b86016040818c03601f19018113156115295760008081fd5b61153161100d565b8983015161153e81611254565b81529082015190878211156115535760008081fd5b6115618d8b848601016112e0565b818b0152855250509186019186016114f9565b5098975050505050505050565b634e487b7160e01b600052603260045260246000fd5b634e487b7160e01b600052601160045260246000fd5b8082028115828204841417610fc757610fc7611597565b634e487b7160e01b600052601260045260246000fd5b6000826115e9576115e96115c4565b500490565b81810381811115610fc757610fc7611597565b80820180821115610fc757610fc7611597565b60006001820161162657611626611597565b5060010190565b6000606080830181845280875180835260808601915060808160051b87010192506020808a0160005b838110156116b857888603607f19018552815180516001600160a01b0316875283015160408488018190528151818901819052611698818b8b01858901611162565b601f01601f19169790970188019650509382019390820190600101611656565b505086019790975250604090930193909352509392505050565b601f82111561171c57600081815260208120601f850160051c810160208610156116f95750805b601f850160051c820191505b8181101561171857828155600101611705565b5050505b505050565b815167ffffffffffffffff81111561173b5761173b610fcd565b61174f8161174984546112a6565b846116d2565b602080601f831160018114611784576000841561176c5750858301515b600019600386901b1c1916600185901b178555611718565b600085815260208120601f198616915b828110156117b357888601518255948401946001909101908401611794565b50858210156117d15787850151600019600388901b60f8161c191681555b5050505050600190811b01905550565b6000826117f0576117f06115c4565b500690565b60008161180457611804611597565b50600019019056fea2646970667358221220d9f6a0bf803c0738562912db15487b3059739ba4476756f2f4a74e7c0e73001d64736f6c63430008140033",
+  "devdoc": {
+    "errors": {
+      "OwnableInvalidOwner(address)": [
+        {
+          "details": "The owner is not a valid owner account. (eg. `address(0)`)"
+        }
+      ],
+      "OwnableUnauthorizedAccount(address)": [
+        {
+          "details": "The caller account is not authorized to perform an operation."
+        }
+      ],
+      "ReentrancyGuardReentrantCall()": [
+        {
+          "details": "Unauthorized reentrant call."
+        }
+      ]
+    },
+    "kind": "dev",
+    "methods": {
+      "owner()": {
+        "details": "Returns the address of the current owner."
+      },
+      "renounceOwnership()": {
+        "details": "Leaves the contract without owner. It will not be possible to call `onlyOwner` functions. Can only be called by the current owner. NOTE: Renouncing ownership will leave the contract without an owner, thereby disabling any functionality that is only available to the owner."
+      },
+      "transferOwnership(address)": {
+        "details": "Transfers ownership of the contract to a new account (`newOwner`). Can only be called by the current owner."
+      }
+    },
+    "version": 1
+  },
+  "userdoc": {
+    "kind": "user",
+    "methods": {},
+    "version": 1
+  },
+  "storageLayout": {
+    "storage": [
+      {
+        "astId": 162,
+        "contract": "contracts/LotteryGame.sol:LotteryGame",
+        "label": "_owner",
+        "offset": 0,
+        "slot": "0",
+        "type": "t_address"
+      },
+      {
+        "astId": 342,
+        "contract": "contracts/LotteryGame.sol:LotteryGame",
+        "label": "_status",
+        "offset": 0,
+        "slot": "1",
+        "type": "t_uint256"
+      },
+      {
+        "astId": 427,
+        "contract": "contracts/LotteryGame.sol:LotteryGame",
+        "label": "manager",
+        "offset": 0,
+        "slot": "2",
+        "type": "t_contract(ILotteryManager)1159"
+      },
+      {
+        "astId": 464,
+        "contract": "contracts/LotteryGame.sol:LotteryGame",
+        "label": "requestIdToLotteryId",
+        "offset": 0,
+        "slot": "3",
+        "type": "t_mapping(t_uint256,t_uint256)"
+      },
+      {
+        "astId": 468,
+        "contract": "contracts/LotteryGame.sol:LotteryGame",
+        "label": "requestIdToNumberOfWinners",
+        "offset": 0,
+        "slot": "4",
+        "type": "t_mapping(t_uint256,t_uint256)"
+      },
+      {
+        "astId": 472,
+        "contract": "contracts/LotteryGame.sol:LotteryGame",
+        "label": "requestIdToLotteryPrizePool",
+        "offset": 0,
+        "slot": "5",
+        "type": "t_mapping(t_uint256,t_uint256)"
+      },
+      {
+        "astId": 476,
+        "contract": "contracts/LotteryGame.sol:LotteryGame",
+        "label": "pendingWithdrawals",
+        "offset": 0,
+        "slot": "6",
+        "type": "t_mapping(t_address,t_uint256)"
+      },
+      {
+        "astId": 512,
+        "contract": "contracts/LotteryGame.sol:LotteryGame",
+        "label": "lotteryResults",
+        "offset": 0,
+        "slot": "7",
+        "type": "t_mapping(t_uint256,t_struct(LotteryResult)507_storage)"
+      }
+    ],
+    "types": {
+      "t_address": {
+        "encoding": "inplace",
+        "label": "address",
+        "numberOfBytes": "20"
+      },
+      "t_array(t_struct(ParticipationStruct)1076_storage)dyn_storage": {
+        "base": "t_struct(ParticipationStruct)1076_storage",
+        "encoding": "dynamic_array",
+        "label": "struct ILotteryManager.ParticipationStruct[]",
+        "numberOfBytes": "32"
+      },
+      "t_bool": {
+        "encoding": "inplace",
+        "label": "bool",
+        "numberOfBytes": "1"
+      },
+      "t_contract(ILotteryManager)1159": {
+        "encoding": "inplace",
+        "label": "contract ILotteryManager",
+        "numberOfBytes": "20"
+      },
+      "t_mapping(t_address,t_uint256)": {
+        "encoding": "mapping",
+        "key": "t_address",
+        "label": "mapping(address => uint256)",
+        "numberOfBytes": "32",
+        "value": "t_uint256"
+      },
+      "t_mapping(t_uint256,t_struct(LotteryResult)507_storage)": {
+        "encoding": "mapping",
+        "key": "t_uint256",
+        "label": "mapping(uint256 => struct LotteryGame.LotteryResult)",
+        "numberOfBytes": "32",
+        "value": "t_struct(LotteryResult)507_storage"
+      },
+      "t_mapping(t_uint256,t_uint256)": {
+        "encoding": "mapping",
+        "key": "t_uint256",
+        "label": "mapping(uint256 => uint256)",
+        "numberOfBytes": "32",
+        "value": "t_uint256"
+      },
+      "t_string_storage": {
+        "encoding": "bytes",
+        "label": "string",
+        "numberOfBytes": "32"
+      },
+      "t_struct(LotteryResult)507_storage": {
+        "encoding": "inplace",
+        "label": "struct LotteryGame.LotteryResult",
+        "members": [
+          {
+            "astId": 496,
+            "contract": "contracts/LotteryGame.sol:LotteryGame",
+            "label": "completed",
+            "offset": 0,
+            "slot": "0",
+            "type": "t_bool"
+          },
+          {
+            "astId": 498,
+            "contract": "contracts/LotteryGame.sol:LotteryGame",
+            "label": "timestamp",
+            "offset": 0,
+            "slot": "1",
+            "type": "t_uint256"
+          },
+          {
+            "astId": 502,
+            "contract": "contracts/LotteryGame.sol:LotteryGame",
+            "label": "winners",
+            "offset": 0,
+            "slot": "2",
+            "type": "t_array(t_struct(ParticipationStruct)1076_storage)dyn_storage"
+          },
+          {
+            "astId": 504,
+            "contract": "contracts/LotteryGame.sol:LotteryGame",
+            "label": "prizePerWinner",
+            "offset": 0,
+            "slot": "3",
+            "type": "t_uint256"
+          },
+          {
+            "astId": 506,
+            "contract": "contracts/LotteryGame.sol:LotteryGame",
+            "label": "seed",
+            "offset": 0,
+            "slot": "4",
+            "type": "t_uint256"
+          }
+        ],
+        "numberOfBytes": "160"
+      },
+      "t_struct(ParticipationStruct)1076_storage": {
+        "encoding": "inplace",
+        "label": "struct ILotteryManager.ParticipationStruct",
+        "members": [
+          {
+            "astId": 1073,
+            "contract": "contracts/LotteryGame.sol:LotteryGame",
+            "label": "account",
+            "offset": 0,
+            "slot": "0",
+            "type": "t_address"
+          },
+          {
+            "astId": 1075,
+            "contract": "contracts/LotteryGame.sol:LotteryGame",
+            "label": "lotteryNumber",
+            "offset": 0,
+            "slot": "1",
+            "type": "t_string_storage"
+          }
+        ],
+        "numberOfBytes": "64"
+      },
+      "t_uint256": {
+        "encoding": "inplace",
+        "label": "uint256",
+        "numberOfBytes": "32"
+      }
+    }
+  }
+}

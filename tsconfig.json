@@ -21,6 +21,14 @@
       "@/*": ["./*"]
     }
   },
-  "include": ["deploy", "test", "typechain-types", "hardhat.config.ts"],
-  "exclude": ["frontend", "node_modules"]
+  "include": [
+    "deploy",
+    "test",
+    "typechain-types",
+    "hardhat.config.ts",
+    "types",
+    "services",
+    "store"
+  ],
+  "exclude": ["node_modules"]
 }
