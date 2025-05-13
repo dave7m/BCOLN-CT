@@ -4,7 +4,7 @@ import DrawTime from "@/components/DrawTime";
 import SubHeader from "@/components/SubHeader";
 import Generator from "@/components/Generator";
 import { useSelector, useDispatch } from "react-redux";
-import { globalActions } from "@/store/global_reducer";
+import { globalActions } from "@/store/globalActions";
 import {
   getLottery,
   getLuckyNumbers,
@@ -15,8 +15,7 @@ export default function Draws({ lottery, lotteryNumbers, numbersPurchased }) {
   const { luckyNumbers, purchasedNumbers, jackpot } = useSelector(
     (state) => state.globalState,
   );
-  const { setLuckyNumbers, setPurchasedNumbers, setJackpot } =
-    globalActions;
+  const { setLuckyNumbers, setPurchasedNumbers, setJackpot } = globalActions;
   const dispatch = useDispatch();
 
   useEffect(() => {

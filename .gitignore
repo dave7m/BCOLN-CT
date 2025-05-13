@@ -36,7 +36,9 @@ yarn-error.log*
 # Misc
 .DS_Store
 dist/
-deployments/
+deployments/*
+!/deployments/sepolia/
+!/deployments/sepolia/**/*
 
 # GitHub workflows (optional to ignore if generated)
 .github/
@@ -46,3 +48,5 @@ deployments/
 .yarn/install-state.gz
 .yarn/unplugged
 .yarn/build-state.yml
+
+addresses/localhost.json

@@ -4,7 +4,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { FaEthereum } from "react-icons/fa";
 import Countdown from "@/components/Countdown";
 import { truncate } from "@/services/blockchain";
-import { globalActions } from "@/store/global_reducer";
+import { globalActions } from "@/store/globalActions";
 
 const Result = ({ jackpot, participants, result }) => {
   const { wallet } = useSelector((state) => state.globalState);

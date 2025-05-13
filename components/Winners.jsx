@@ -4,7 +4,7 @@ import { useRouter } from "next/router";
 import { FaTimes } from "react-icons/fa";
 import { performDraw } from "@/services/blockchain";
 import { useSelector, useDispatch } from "react-redux";
-import { globalActions } from "@/store/global_reducer";
+import { globalActions } from "@/store/globalActions";
 
 const Winners = () => {
   const router = useRouter();

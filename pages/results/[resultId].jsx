@@ -4,7 +4,7 @@ import Result from "@/components/Result";
 import Winners from "@/components/Winners";
 import SubHeader from "@/components/SubHeader";
 import { useDispatch, useSelector } from "react-redux";
-import { globalActions } from "@/store/global_reducer";
+import { globalActions } from "@/store/globalSlice";
 import {
   getLottery,
   getLotteryResult,

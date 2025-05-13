@@ -5,11 +5,10 @@ import { FaEthereum } from "react-icons/fa";
 import Countdown from "@/components/Countdown";
 import { buyTicket } from "@/services/blockchain";
 import { useDispatch, useSelector } from "react-redux";
-import { globalActions } from "@/store/global_reducer";
+import { globalActions } from "@/store/globalActions";
 
 const DrawTime = ({ jackpot, luckyNumbers, participants }) => {
-  const { setGeneratorModal, setGroup } =
-    globalActions;
+  const { setGeneratorModal, setGroup } = globalActions;
   const { wallet, currentUser, group } = useSelector(
     (state) => state.globalState,
   );
