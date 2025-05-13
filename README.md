@@ -74,7 +74,26 @@ yarn hardhat node
    - In MetaMask, go to the **Account menu > Import Account**
    - Paste one of the private keys from the terminal output
 
-5. Deploy Contracts
+5. Configure Supabase for image uploads
+
+This project uses [Supabase](https://supabase.com) to store uploaded jackpot images and optionally save metadata in a database.
+
+- Create a project at [https://app.supabase.com](https://app.supabase.com)
+- In **Storage**, create a public bucket named `jackpot-images`
+- Go to **Project Settings → API**, and copy:
+  - `SUPABASE_URL`
+  - `SUPABASE_ANON_KEY`
+  - `SUPABASE_SERVICE_ROLE_KEY`
+
+Add them to your `.env.local`:
+```env
+SUPABASE_URL=https://your-project.supabase.co
+SUPABASE_SERVICE_ROLE_KEY=your-secret-service-role-key
+SUPABASE_ANON_KEY=your-anon-key
+```
+
+
+6. Deploy Contracts
    In Terminal #2, run the following commands:
 
 ```bash
