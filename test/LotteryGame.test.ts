@@ -19,6 +19,7 @@ describe("LotteryGame", function () {
   const expiresInOneHour = Math.floor(Date.now() / 1000) + 3600;
   
   beforeEach(async () => {
+    // test accounts
     [owner, user1, user2] = await ethers.getSigners();
     
     // Deploy VRF Mock
@@ -47,17 +48,17 @@ describe("LotteryGame", function () {
     // Connect manager to game
     await manager.setGame(await game.getAddress());
     
-    // Create a lottery - updated parameters to match new contract
+    // Create a lottery
     await manager.createLottery(
       "L",
       "Desc",
-      "image.url", // Added imageURL parameter
+      "image.url", 
       ticketPrice,
       servicePercent,
       expiresInOneHour
     );
     
-    // Import lucky numbers for lotteryId 0 (starts at 0 now)
+    // Import lucky numbers 
     await manager.importLuckyNumbers(0, ["A", "B", "C"]);
     
     // Buy tickets
@@ -75,12 +76,10 @@ describe("LotteryGame", function () {
   });
   
   it("should call drawWinners and trigger VRF request", async () => {
-    // Using lotteryId 0 instead of 1
     await expect(manager.connect(owner).drawWinners(0, 2)).to.not.be.reverted;
   });
   
   it("should handle fulfillRandomWords and distribute winnings", async () => {
-    // Using lotteryId 0 instead of 1
     await manager.drawWinners(0, 2);
     
     const requestId = 1;
@@ -107,7 +106,6 @@ describe("LotteryGame", function () {
   });
   
   it("should allow withdrawal by winners and owner", async () => {
-    // Using lotteryId 0 instead of 1
     await manager.drawWinners(0, 2);
     
     await vrfMock.callBackWithRandomness(1, [42], await game.getAddress());
@@ -129,4 +127,30 @@ describe("LotteryGame", function () {
     expect(after + gasUsed).to.be.gte(expected - delta);
     expect(after + gasUsed).to.be.lte(expected + delta);
   });
+  
+  
+  it("should revert withdrawPayments if no funds", async () => {
+    await expect(
+      game.connect(user1).withdrawPayments()
+    ).to.be.revertedWithCustomError(game, "NoFunds");
+  });
+  
+  it("should revert withdrawPayments if transfer fails", async () => {
+    // user 1 winning
+    await manager.drawWinners(0, 1);
+    await vrfMock.callBackWithRandomness(1, [42], await game.getAddress());
+  
+    // 0 check manipualtion
+    await ethers.provider.send("hardhat_setBalance", [
+      await game.getAddress(),
+      "0x0"
+    ]);
+  
+    // revert verification
+    await expect(
+      game.connect(user1).withdrawPayments()
+    ).to.be.revertedWithCustomError(game, "NoFunds");
+  });
+  
+  
 });
