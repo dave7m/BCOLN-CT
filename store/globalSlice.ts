@@ -30,6 +30,8 @@ export interface LotteryResult {
 
 interface GlobalState {
   wallet: string;
+  generatorModal: string;
+  winnerModal: string;
   currentUser: string | null;
   jackpots: Lottery[];
   jackpot: Lottery | null;
@@ -41,6 +43,8 @@ interface GlobalState {
 
 const initialState: GlobalState = {
   wallet: "",
+  generatorModal: "scale-0",
+  winnerModal: "scale-0",
   currentUser: null,
   jackpots: [],
   jackpot: null,
@@ -54,6 +58,12 @@ export const globalSlice = createSlice({
   name: "global",
   initialState,
   reducers: {
+    setWinnerModal: (state, action) => {
+      state.winnerModal = action.payload;
+    },
+    setGeneratorModal: (state, action) => {
+      state.generatorModal = action.payload;
+    },
     updateWallet: (state, action: PayloadAction<string>) => {
       state.wallet = action.payload;
     },

@@ -1,7 +1,7 @@
 import Head from "next/head";
 import Header from "../components/Header";
 import Jackpots from "../components/Jackpots";
-import { getLotteries } from "@/services/blockchain.srr";
+import { getLotteries } from "@/services/blockchain";
 
 export default function Home({ jackpots }) {
   return (

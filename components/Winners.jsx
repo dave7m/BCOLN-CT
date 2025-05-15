@@ -2,11 +2,10 @@ import { useState } from "react";
 import { toast } from "react-toastify";
 import { useRouter } from "next/router";
 import { FaTimes } from "react-icons/fa";
-import { performDraw } from "@/services/blockchain";
 import { useSelector, useDispatch } from "react-redux";
-import { globalActions } from "@/store/globalActions";
+import { globalActions } from "../store/globalSlice";
 
-const Winners = () => {
+const Winners = ({ onDraw }) => {
   const router = useRouter();
   const dispatch = useDispatch();
   const { resultId } = router.query;
@@ -19,7 +18,7 @@ const Winners = () => {
 
     await toast.promise(
       new Promise(async (resolve, reject) => {
-        await performDraw(resultId, numberOfwinner)
+        await onDraw(resultId, numberOfwinner)
           .then(async () => {
             setNumberOfwinner("");
             dispatch(setWinnerModal("scale-0"));
@@ -69,7 +68,7 @@ const Winners = () => {
               step={1}
               min={1}
               name="numberOfwinner"
-              placeholder="Lucky Numbers e.g 19"
+              placeholder="Number of Winners, e.g. 3"
               onChange={(e) => setNumberOfwinner(e.target.value)}
               value={numberOfwinner}
             />

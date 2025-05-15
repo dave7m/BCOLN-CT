@@ -1,11 +1,11 @@
 import Link from "next/link";
 import { toast } from "react-toastify";
 import { useRouter } from "next/router";
-import { FaEthereum } from "react-icons/fa";
+import { FaArrowLeft, FaEthereum } from "react-icons/fa";
 import Countdown from "@/components/Countdown";
 import { buyTicket } from "@/services/blockchain";
 import { useDispatch, useSelector } from "react-redux";
-import { globalActions } from "@/store/globalActions";
+import { globalActions } from "../store/globalSlice";
 
 const DrawTime = ({ jackpot, luckyNumbers, participants }) => {
   const { setGeneratorModal } = globalActions;
@@ -38,7 +38,14 @@ const DrawTime = ({ jackpot, luckyNumbers, participants }) => {
   };
 
   return (
-    <div className="py-10 px-5 bg-slate-100">
+    <div className="py-10 px-5 bg-slate-100 relative">
+      <Link
+        href={`/`}
+        className="absolute top-8 left-8 bg-[#0c2856] text-white flex items-center gap-2 py-2 px-4 rounded-full hover:bg-[#1a396c] transition font-medium shadow-md"
+      >
+        <FaArrowLeft size={14} />
+        <span>Jackpots</span>
+      </Link>
       <div className="flex flex-col items-center justify-center text-center py-10 space-y-3">
         <h4 className="text-4xl text-slate-800 font-bold">
           Buy Lottery Tickets Online
@@ -71,67 +78,69 @@ const DrawTime = ({ jackpot, luckyNumbers, participants }) => {
           )}
 
           {wallet?.toLowerCase() === jackpot?.owner?.toLowerCase() ? (
-              <Link
-                  href={`/results/` + jackpot?.id}
-                  className="bg-[#0c2856] text-white text-sm font-semibold py-2 px-4 rounded-full hover:bg-[#1a396c] transition"
-              >
-                Draw Result
-              </Link>
+            <Link
+              href={`/results/` + jackpot?.id}
+              className="bg-[#0c2856] text-white text-sm font-semibold py-2 px-4 rounded-full hover:bg-[#1a396c] transition"
+            >
+              Draw Result
+            </Link>
           ) : (
-              <Link
-                  href={`/results/` + jackpot?.id}
-                  className="bg-[#0c2856] text-white text-sm font-semibold py-2 px-4 rounded-full hover:bg-[#1a396c] transition"
-              >
-                Show Result
-              </Link>
+            <Link
+              href={`/results/` + jackpot?.id}
+              className="bg-[#0c2856] text-white text-sm font-semibold py-2 px-4 rounded-full hover:bg-[#1a396c] transition"
+            >
+              Show Result
+            </Link>
           )}
         </div>
       </div>
 
-      <div className="bg-white rounded-xl shadow-md w-full sm:w-3/4 mx-auto p-6 overflow-x-auto text-sm">
-        <p className="text-center text-2xl font-semibold text-slate-700 mb-4">
-          Select Your Winning Lottery Numbers
-        </p>
-        <table className="table-auto w-full">
-          <thead>
-            <tr className="text-left text-slate-600 font-semibold border-b">
-              <th className="py-3 px-4">#</th>
-              <th className="py-3 px-4">Ticket Price</th>
-              <th className="py-3 px-4">Draw Date</th>
-              <th className="py-3 px-4">Ticket Number</th>
-              <th className="py-3 px-4">Action</th>
-            </tr>
-          </thead>
-          <tbody>
-            {luckyNumbers?.map((luckyNumber, i) => (
-              <tr key={i} className="border-b text-slate-700">
-                <td className="py-3 px-4 font-medium">{i + 1}</td>
-                <td className="py-3 px-4">
-                  <div className="flex items-center space-x-1">
-                    <FaEthereum className="text-amber-500" />
-                    <span>{jackpot?.ticketPrice}</span>
-                  </div>
-                </td>
-                <td className="py-3 px-4">{jackpot?.drawsAt}</td>
-                <td className="py-3 px-4">{luckyNumber}</td>
-                <td className="py-3 px-4">
-                  <button
-                    disabled={participants.includes(luckyNumber)}
-                    onClick={() => handlePurchase(i)}
-                    className={`bg-black text-white text-sm py-2 px-4 rounded-full transition ${
-                      participants.includes(luckyNumber)
-                        ? "opacity-50 cursor-not-allowed"
-                        : "hover:bg-rose-600"
-                    }`}
-                  >
-                    BUY NOW
-                  </button>
-                </td>
+      {
+        <div className="bg-white rounded-xl shadow-md w-full sm:w-3/4 mx-auto p-6 overflow-x-auto text-sm">
+          <p className="text-center text-2xl font-semibold text-slate-700 mb-4">
+            Select Your Winning Lottery Numbers
+          </p>
+          <table className="table-auto w-full">
+            <thead>
+              <tr className="text-left text-slate-600 font-semibold border-b">
+                <th className="py-3 px-4">#</th>
+                <th className="py-3 px-4">Ticket Price</th>
+                <th className="py-3 px-4">Draw Date</th>
+                <th className="py-3 px-4">Ticket Number</th>
+                <th className="py-3 px-4">Action</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+            </thead>
+            <tbody>
+              {luckyNumbers?.map((luckyNumber, i) => (
+                <tr key={i} className="border-b text-slate-700">
+                  <td className="py-3 px-4 font-medium">{i + 1}</td>
+                  <td className="py-3 px-4">
+                    <div className="flex items-center space-x-1">
+                      <FaEthereum className="text-amber-500" />
+                      <span>{jackpot?.ticketPrice}</span>
+                    </div>
+                  </td>
+                  <td className="py-3 px-4">{jackpot?.drawsAt}</td>
+                  <td className="py-3 px-4">{luckyNumber}</td>
+                  <td className="py-3 px-4">
+                    <button
+                      disabled={participants.includes(luckyNumber)}
+                      onClick={() => handlePurchase(i)}
+                      className={`bg-black text-white text-sm py-2 px-4 rounded-full transition ${
+                        participants.includes(luckyNumber)
+                          ? "opacity-50 cursor-not-allowed"
+                          : "hover:bg-rose-600"
+                      }`}
+                    >
+                      BUY NOW
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      }
     </div>
   );
 };
