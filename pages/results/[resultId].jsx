@@ -4,12 +4,14 @@ import Result from "@/components/Result";
 import Winners from "@/components/Winners";
 import SubHeader from "@/components/SubHeader";
 import { useDispatch, useSelector } from "react-redux";
-import { globalActions } from "@/store/globalSlice";
+import { globalActions } from "../../store/globalSlice";
 import {
   getLottery,
   getLotteryResult,
   getParticipants,
-} from "@/services/blockchain.srr";
+} from "@/services/blockchain";
+import { performDraw } from "../../services/blockchain";
+import { useRouter } from "next/router";
 
 export default function Results({ lottery, participantList, lotteryResult }) {
   const { participants, jackpot, result } = useSelector(
@@ -17,12 +19,23 @@ export default function Results({ lottery, participantList, lotteryResult }) {
   );
   const { setParticipants, setJackpot, setResult } = globalActions;
   const dispatch = useDispatch();
-
+  const router = useRouter();
   useEffect(() => {
     dispatch(setResult(lotteryResult));
     dispatch(setJackpot(lottery));
     dispatch(setParticipants(participantList));
   }, []);
+
+  const handleDraw = async (resultId, numberOfWinners) => {
+    await performDraw(resultId, BigInt(numberOfWinners));
+    const updatedParticipants = await getParticipants(BigInt(lottery.id));
+    const updatedResult = await getLotteryResult(BigInt(lottery.id));
+    const updatedLottery = await getLottery(BigInt(lottery.id));
+    dispatch(setParticipants(updatedParticipants));
+    dispatch(setJackpot(updatedLottery));
+    dispatch(setResult(updatedResult));
+    router.reload();
+  };
 
   return (
     <div>
@@ -33,8 +46,8 @@ export default function Results({ lottery, participantList, lotteryResult }) {
 
       <div className="min-h-screen bg-slate-100">
         <SubHeader />
-        <Result jackpot={jackpot} participants={participants} result={result} />
-        <Winners />
+        <Result />
+        <Winners onDraw={handleDraw} />
       </div>
     </div>
   );

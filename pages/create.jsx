@@ -20,11 +20,11 @@ export default function Create() {
 
   useEffect(() => {
     if (
-        title.trim() !== "" &&
-        description.trim() !== "" &&
-        imageURL !== "" &&
-        ticketPrice !== "" &&
-        expiresAt !== ""
+      title.trim() !== "" &&
+      description.trim() !== "" &&
+      imageURL !== "" &&
+      ticketPrice !== "" &&
+      expiresAt !== ""
     ) {
       setIsFormComplete(true);
     } else {
@@ -146,9 +146,9 @@ export default function Create() {
               type="submit"
               disabled={!isFormComplete}
               className={`w-full py-3 px-4 font-bold rounded-md transition-all shadow-md ${
-                  isFormComplete
-                      ? "text-white bg-blue-600 hover:bg-blue-700 hover:shadow-lg"
-                      : "text-gray-500 bg-gray-300 cursor-not-allowed"
+                isFormComplete
+                  ? "text-white bg-blue-600 hover:bg-blue-700 hover:shadow-lg"
+                  : "text-gray-500 bg-gray-300 cursor-not-allowed"
               }`}
             >
               🚀 Submit Jackpot

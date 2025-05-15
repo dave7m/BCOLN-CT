@@ -49,6 +49,7 @@ contract LotteryGame is
         uint256 seed
     );
     event Deposit(address indexed to, uint256 amount);
+    event Withdrawn(address indexed recipient, uint256 amount);
 
     struct LotteryResult {
         bool completed;
@@ -77,9 +78,6 @@ contract LotteryGame is
         uint256 lotteryId,
         uint256 numberOfWinners
     ) external payable onlyManager {
-        uint256 expected = manager.getJackpot(lotteryId);
-        if (msg.value != expected) revert NoFunds();
-
         // request random number
         uint256 requestId = COORDINATOR.requestRandomWords(
             KEY_HASH,
@@ -191,6 +189,7 @@ contract LotteryGame is
         pendingWithdrawals[msg.sender] = 0;
         (bool ok, ) = payable(msg.sender).call{value: amount}("");
         if (!ok) revert NoFunds();
+        emit Withdrawn(msg.sender, amount);
     }
 
     function getLotteryResults(

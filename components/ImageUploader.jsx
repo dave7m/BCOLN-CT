@@ -14,18 +14,18 @@ export default function ImageUploader({ onUploaded }) {
       return;
     }
 
-    // file size max 1 MB
-    const maxSize = 1024 * 1024; // 1 MB in Bytes
-    if (file.size > maxSize) {
-      alert("File size exceeds 1 MB.");
-      return;
-    }
-
     setLoading(true);
 
     const reader = new FileReader();
     reader.onloadend = async () => {
       const base64 = reader.result;
+
+      const maxSize = 1024 * 1024; // 1 MB in Bytes
+      if (base64.length > maxSize) {
+        alert("File size exceeds 1 MB.");
+        setLoading(false);
+        return;
+      }
 
       const res = await fetch("/api/upload-image", {
         method: "POST",

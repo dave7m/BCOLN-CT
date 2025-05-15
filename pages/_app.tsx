@@ -5,11 +5,16 @@ import { Provider } from "react-redux";
 import { useEffect, useState } from "react";
 import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer } from "react-toastify";
+import { isWalletConnected } from "@/services/blockchain"; // or wherever it's defined
 
 export default function MyApp({ Component, pageProps }: AppProps) {
   const [showChild, setShowChild] = useState(false);
   useEffect(() => {
     setShowChild(true);
+  }, []);
+
+  useEffect(() => {
+    isWalletConnected();
   }, []);
 
   if (!showChild) {

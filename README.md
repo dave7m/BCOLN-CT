@@ -88,18 +88,19 @@ This project uses [Supabase](https://supabase.com) to store uploaded jackpot ima
 
 - **Create a Supabase project** at [https://app.supabase.com](https://app.supabase.com)
 - **Create a public bucket** in **Storage** named `jackpot-images`
-- *(Optional)* In **Database**, create a table `jackpot_images` to store metadata like `url`, `filename`, etc.
+- _(Optional)_ In **Database**, create a table `jackpot_images` to store metadata like `url`, `filename`, etc.
 - **Get your keys** under **Project Settings → API**:
   - **SUPABASE_URL** — your project’s URL
   - **SUPABASE_ANON_KEY** — for safe frontend access
   - **SUPABASE_SERVICE_ROLE_KEY** — for backend-only DB access (⚠️ keep secret)
 
 Add the following to your `.env.local`:
+
 ```env
 SUPABASE_URL=https://your-project.supabase.co
 SUPABASE_ANON_KEY=your-anon-key
 SUPABASE_SERVICE_ROLE_KEY=your-service-role-key
-````
+```
 
 ### 🎰 5. Use the dApp
 

@@ -144,7 +144,8 @@ contract LotteryManager is Ownable, ILotteryManager {
     ) external onlyLotteryOwner(lotteryId) {
         ILotteryManager.LotteryStruct storage lottery = lotteries[lotteryId];
         if (lottery.drawn) revert SimpleError("Lottery already drawn");
-        //        if(block.timestamp < lottery.expiresAt) revert SimpleError ("Lottery not expired yet");
+        if (block.timestamp < lottery.expiresAt)
+            revert SimpleError("Lottery not expired yet");
         if (numberOfWinners < 1)
             revert SimpleError("Must have at least one winner");
         if (
@@ -196,7 +197,7 @@ contract LotteryManager is Ownable, ILotteryManager {
     {
         _lotteries = new LotteryStruct[](_totalLotteries);
         for (uint256 i = 0; i < _totalLotteries; i++) {
-            _lotteries[i] = _lotteries[i];
+            _lotteries[i] = lotteries[i];
         }
     }
 

@@ -25,7 +25,7 @@ const deployLotteryContracts: DeployFunction = async function (
   }
 
   const vrfCoordinator = isLocal
-    ? process.env.LOCALHOST_VRF_COORDINATOR
+    ? process.env.NEXT_PUBLIC_LOCALHOST_VRF_COORDINATOR
     : process.env.VRF_COORDINATOR;
   const keyHash = isLocal ? ethers.ZeroHash : process.env.VRF_KEYHASH;
   const subscriptionId = isLocal ? 1 : BigInt(process.env.VRF_SUBSCRIPTION_ID!);

@@ -27,6 +27,7 @@ const Header = () => {
           <button
             className="flex items-center border border-white/30 py-2 px-4 rounded-full bg-white/10
             hover:bg-white/20 transition text-white text-sm backdrop-blur-sm"
+            disabled
           >
             {truncate(wallet, 4, 4, 11)}
           </button>
