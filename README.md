@@ -59,16 +59,18 @@ This installs dependencies for both the Hardhat backend and the `frontend/` work
 ### 🔁 1. Start Local Hardhat Node
 
 ```bash
-yarn run:local
+yarn hardhat node --no-deploy
 ```
 
-This script:
+This script starts the local Hardhat node
 
-- Starts the local Hardhat node
-- Waits for it to be ready
-- Extracts and saves test accounts
-- Deploys mocks and lottery contracts
-- Starts the frontend dev server
+Please create a `.env.localhost.local` file, where you define `LOCALHOST=http://127.0.0.1:8545`. The rest of the
+necessary variables will be set (e.g. by `yarn extract:local-keys`).
+
+```bash
+yarn run:local
+``` 
+This script deploys the contracts on the local chain and starts the web server.
 
 ### 🧪 2. Add Local Network to MetaMask
 
@@ -123,6 +125,7 @@ VRF_COORDINATOR=...
 VRF_KEYHASH=0x...
 VRF_SUBSCRIPTION_ID=...
 ```
+You can get your VRF Subscription [here](https://vrf.chain.link/).
 
 ### 2. Deploy Contracts
 
