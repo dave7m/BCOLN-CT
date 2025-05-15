@@ -14,7 +14,7 @@ const localhost_user_2_private_key =
 const localhost_user_3_private_key =
   process.env.LOCALHOST_USER_3_PRIVATE_KEY || ZeroHash;
 const sepolia_url = process.env.SEPOLIA_RPC_URL || "";
-const sepolia_private_key = process.env.SEPOLIA_PRIVATE_KEY || "";
+const sepolia_private_key = process.env.SEPOLIA_PRIVATE_KEY || ZeroHash;
 
 const config: HardhatUserConfig = {
   solidity: {

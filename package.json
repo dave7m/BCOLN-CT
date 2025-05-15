@@ -23,7 +23,7 @@
     "console:local": "hardhat console --network localhost",
     "console:sepolia": "hardhat console --network sepolia",
     "test": "hardhat compile && hardhat typechain && hardhat test",
-    "run:local": "cross-env NEXT_PUBLIC_TARGET_NETWORK=localhost concurrently -k -n node,rest -c blue,green \"yarn hardhat node\" \"yarn wait-on http://127.0.0.1:8545 && yarn extract:local-keys && yarn deploy:local && yarn dev\"",
+    "run:local": "cross-env NEXT_PUBLIC_TARGET_NETWORK=localhost yarn extract:local-keys && yarn deploy:local && cross-env NEXT_PUBLIC_TARGET_NETWORK=localhost yarn dev",
     "run:sepolia": "cross-env NEXT_PUBLIC_TARGET_NETWORK=sepolia yarn deploy:sepolia && cross-env NEXT_PUBLIC_TARGET_NETWORK=sepolia yarn dev"
   },
   "keywords": [],
