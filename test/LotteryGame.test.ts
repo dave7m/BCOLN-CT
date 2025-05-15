@@ -4,7 +4,7 @@ import type {
   LotteryGame,
   LotteryManager,
   VRFCoordinatorV2Mock,
-} from "../typechain-types";
+} from "@/typechain-types";
 
 let snapshotId: string;
 
