@@ -9,7 +9,7 @@ import { globalActions } from "../store/globalSlice";
 
 const DrawTime = ({ jackpot, luckyNumbers, participants }) => {
   const { setGeneratorModal } = globalActions;
-  const { wallet, currentUser, group } = useSelector(
+  const { wallet } = useSelector(
     (state) => state.globalState,
   );
   const dispatch = useDispatch();

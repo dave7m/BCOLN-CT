@@ -3,7 +3,7 @@ import { useEffect } from "react";
 import Result from "../../components/Result";
 import Winners from "../../components/Winners";
 import SubHeader from "../../components/SubHeader";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { globalActions } from "../../store/globalSlice";
 import {
   getLottery,

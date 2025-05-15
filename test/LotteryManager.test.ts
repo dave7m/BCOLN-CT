@@ -1,6 +1,6 @@
 import { expect } from "chai";
 import { ethers } from "hardhat";
-import type { LotteryManager } from "../typechain-types";
+import type { LotteryManager } from "@/typechain-types";
 
 describe("LotteryManager", function () {
   let manager: LotteryManager;
