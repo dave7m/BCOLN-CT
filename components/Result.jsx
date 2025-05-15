@@ -1,14 +1,10 @@
 import Link from "next/link";
 import Identicon from "react-identicons";
-import { useSelector, useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { FaArrowLeft, FaEthereum } from "react-icons/fa";
-import Countdown from "@/components/Countdown";
+import Countdown from "../components/Countdown";
 import { globalActions } from "../store/globalSlice";
-import {
-  createJackpot,
-  truncate,
-  withdrawPayment,
-} from "../services/blockchain";
+import { truncate, withdrawPayment } from "../services/blockchain";
 import { toast } from "react-toastify";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";

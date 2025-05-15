@@ -1,17 +1,15 @@
 import Head from "next/head";
 import { useEffect } from "react";
-import DrawTime from "@/components/DrawTime";
-import SubHeader from "@/components/SubHeader";
-import Generator from "@/components/Generator";
-import { useSelector, useDispatch } from "react-redux";
+import DrawTime from "../../components/DrawTime";
+import SubHeader from "../../components/SubHeader";
+import Generator from "../../components/Generator";
+import { useDispatch, useSelector } from "react-redux";
 import { globalActions } from "../../store/globalSlice";
 import {
   getLottery,
   getLuckyNumbers,
   getPurchasedNumbers,
-} from "@/services/blockchain";
-import Link from "next/link";
-import { FaArrowLeft } from "react-icons/fa";
+} from "../../services/blockchain";
 
 export default function Draws({ lottery, lotteryNumbers, numbersPurchased }) {
   const { luckyNumbers, purchasedNumbers, jackpot } = useSelector(
