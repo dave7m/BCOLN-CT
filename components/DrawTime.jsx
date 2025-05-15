@@ -2,8 +2,8 @@ import Link from "next/link";
 import { toast } from "react-toastify";
 import { useRouter } from "next/router";
 import { FaArrowLeft, FaEthereum } from "react-icons/fa";
-import Countdown from "@/components/Countdown";
-import { buyTicket } from "@/services/blockchain";
+import Countdown from "../components/Countdown";
+import { buyTicket } from "../services/blockchain";
 import { useDispatch, useSelector } from "react-redux";
 import { globalActions } from "../store/globalSlice";
 

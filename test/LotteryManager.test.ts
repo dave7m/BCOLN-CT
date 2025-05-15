@@ -149,26 +149,37 @@ describe("LotteryManager", function () {
 
   it("should revert createLottery with empty title", async () => {
     await expect(
-      manager.createLottery("", "Desc", "img", ticketPrice, 10, expiresInOneHour)
+      manager.createLottery(
+        "",
+        "Desc",
+        "img",
+        ticketPrice,
+        10,
+        expiresInOneHour,
+      ),
     ).to.be.revertedWithCustomError(manager, "SimpleError");
   });
-  
+
   it("should revert createLottery with past expiration", async () => {
     const pastTime = Math.floor(Date.now() / 1000) - 3600;
     await expect(
-      manager.createLottery("L", "Desc", "img", ticketPrice, 10, pastTime)
+      manager.createLottery("L", "Desc", "img", ticketPrice, 10, pastTime),
     ).to.be.revertedWithCustomError(manager, "SimpleError");
   });
-  
-  it("should revert drawWinners if too many winners", async () => {
-    await manager.createLottery("L", "Desc", "img", ticketPrice, 10, expiresInOneHour);
-    await manager.importLuckyNumbers(0, ["A"]);
-    
-    await expect(
-      manager.drawWinners(0, 51) // MAX_WINNERS + 1
-    ).to.be.revertedWithCustomError(manager, "SimpleError");
-  });
-  
 
-  
+  it("should revert drawWinners if too many winners", async () => {
+    await manager.createLottery(
+      "L",
+      "Desc",
+      "img",
+      ticketPrice,
+      10,
+      expiresInOneHour,
+    );
+    await manager.importLuckyNumbers(0, ["A"]);
+
+    await expect(
+      manager.drawWinners(0, 51), // MAX_WINNERS + 1
+    ).to.be.revertedWithCustomError(manager, "SimpleError");
+  });
 });

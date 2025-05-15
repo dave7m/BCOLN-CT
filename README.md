@@ -69,7 +69,8 @@ necessary variables will be set (e.g. by `yarn extract:local-keys`).
 
 ```bash
 yarn run:local
-``` 
+```
+
 This script deploys the contracts on the local chain and starts the web server.
 
 ### 🧪 2. Add Local Network to MetaMask
@@ -125,6 +126,7 @@ VRF_COORDINATOR=...
 VRF_KEYHASH=0x...
 VRF_SUBSCRIPTION_ID=...
 ```
+
 You can get your VRF Subscription [here](https://vrf.chain.link/).
 
 ### 2. Deploy Contracts

@@ -23,6 +23,7 @@ import managerAbi from "@/artifacts/contracts/LotteryManager.sol/LotteryManager.
 import gameAbi from "@/artifacts/contracts/LotteryGame.sol/LotteryGame.json";
 import vrfAbi from "@/artifacts/contracts/VRFCoordinatorV2Mock.sol/VRFCoordinatorV2Mock.json";
 import { toast } from "react-toastify";
+
 const network = process.env.NEXT_PUBLIC_TARGET_NETWORK || "localhost";
 let contractAddresses;
 
@@ -41,13 +42,6 @@ const {
   setJackpot,
   setResult,
 } = globalActions;
-
-const getEthereum = () => {
-  if (typeof window !== "undefined" && window.ethereum) {
-    return window.ethereum;
-  }
-  return undefined;
-};
 
 const toWei = (num: bigint | number | string) => parseEther(num.toString());
 const fromWei = (num: bigint) => formatEther(num);
@@ -234,9 +228,7 @@ const createJackpot = async ({
   if (!ethereum) return;
 
   try {
-    // const connectedAccount = store.getState().globalState.wallet
     const { manager } = await getEthereumContracts();
-
     const tx = await manager.createLottery(
       title,
       description,
@@ -261,12 +253,11 @@ const buyTicket = async (
   if (!ethereum) return;
 
   try {
-    // const connectedAccount = store.getState().globalState.wallet
     const { manager } = await getEthereumContracts();
     const tx = await manager.buyTicket(lotteryId, luckyNumberId, {
       value: toWei(ticketPrice),
     });
-    const receipt = await tx.wait();
+    await tx.wait();
     const purchasedNumbers = await getPurchasedNumbers(lotteryId);
     const lotteryParticipants = await getParticipants(lotteryId);
     const lottery = await getLottery(lotteryId);
